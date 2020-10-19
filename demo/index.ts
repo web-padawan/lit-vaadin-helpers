@@ -16,15 +16,11 @@ interface User {
   };
 }
 
-interface UsersGrid {
-  users: User[];
-}
-
-interface UsersFilter {
+interface HasFilter {
   filter: string;
 }
 
-const usersController: GridController<User, UsersGrid & UsersFilter> = {
+const usersController: GridController<User, HasFilter> = {
   columns: [
     {
       header: '#',
@@ -38,9 +34,10 @@ const usersController: GridController<User, UsersGrid & UsersFilter> = {
       columns: [
         {
           header: 'First',
-          renderer: ({ item }, { filter }) => {
-            const match = filter && item.name.first.indexOf(filter) > -1;
-            return match ? html`<b>${item.name.first}</b>` : html`${item.name.first}`;
+          renderer: (model, { filter }) => {
+            const name = model.item.name.first;
+            const match = filter && name.indexOf(filter) > -1;
+            return match ? html`<b>${name}</b>` : html`${name}`;
           },
           width: 'calc(20% - 12px)'
         },
@@ -70,7 +67,7 @@ const usersController: GridController<User, UsersGrid & UsersFilter> = {
   ]
 };
 
-class GridWrapper extends LitElement implements UsersGrid, UsersFilter {
+class GridWrapper extends LitElement implements HasFilter {
   @property({ attribute: false }) users!: User[];
 
   @property({ type: String }) filter = '';
