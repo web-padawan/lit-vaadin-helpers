@@ -26,6 +26,9 @@ export interface ColumnGroupController<M, H> extends ColumnBaseController {
   columns: Array<ColumnController<M, H>>;
 }
 
+// TODO: experiment with template literal types to only allow strings
+// that actually correspond to the model item sub properties names (requires TS 4.1)
+// https://devblogs.microsoft.com/typescript/announcing-typescript-4-1-beta/#template-literal-types
 export interface SimpleColumnController extends ColumnBaseController {
   path: string;
 }
