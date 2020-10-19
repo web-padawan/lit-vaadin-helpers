@@ -83,7 +83,7 @@ class GridWrapper extends LitElement implements HasFilter {
       ></vaadin-text-field>
       <vaadin-grid
         .items="${this.users}"
-        ...="${controller(usersController, this, this.filter)}"
+        ...="${controller(usersController, this.filter)}"
       ></vaadin-grid>
     `;
   }

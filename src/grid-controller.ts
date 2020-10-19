@@ -49,10 +49,10 @@ export interface GridController<M, H> {
   columns: Array<ColumnController<M, H>>;
 }
 
-class Controller<T, H extends HTMLElement> {
+class Controller<T, H> {
   private grid!: GridElement;
 
-  constructor(grid: GridElement, host: H, config: GridController<T, H>) {
+  constructor(grid: GridElement, host: HTMLElement & H, config: GridController<T, H>) {
     // save reference
     this.grid = grid;
 
@@ -131,12 +131,8 @@ class Controller<T, H extends HTMLElement> {
 const partToController = new WeakMap();
 const previousValues = new WeakMap<Part, unknown>();
 
-// TODO: refactor to avoid passing host (used for `eventContext`)
-// See https://github.com/Polymer/lit-html/issues/1143
 export const controller = directive(
-  <T, H extends HTMLElement>(config: GridController<T, H>, host: H, value?: unknown) => (
-    part: Part
-  ): void => {
+  <T, H>(config: GridController<T, H>, value?: unknown) => async (part: Part) => {
     const propertyPart = part as PropertyPart;
     if (!(part instanceof PropertyPart) || propertyPart.committer.name !== '..') {
       throw new Error('Only supports ...="" syntax');
@@ -145,6 +141,15 @@ export const controller = directive(
     let controller = partToController.get(part);
     if (!controller) {
       const grid = propertyPart.committer.element as GridElement;
+
+      // TODO: refactor to get host from directive metadata.
+      // See https://github.com/Polymer/lit-html/issues/1143
+      if (!grid.isConnected) {
+        await Promise.resolve();
+      }
+
+      const host = (grid.getRootNode() as ShadowRoot).host as HTMLElement & H;
+
       controller = new Controller<T, H>(grid, host, config);
       partToController.set(part, controller);
     } else {
