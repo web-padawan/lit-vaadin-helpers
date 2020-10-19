@@ -14,6 +14,12 @@ npm install
 npm run build
 ```
 
+## Run demo
+
+```sh
+npm run dev
+```
+
 ## Run unit tets
 
 ```sh

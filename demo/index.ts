@@ -1,0 +1,107 @@
+import { LitElement, html, property, TemplateResult } from 'lit-element';
+import '@vaadin/vaadin-grid';
+import '@vaadin/vaadin-grid/vaadin-grid-column-group';
+import '@vaadin/vaadin-text-field';
+import type { TextFieldElement } from '@vaadin/vaadin-text-field';
+import { controller, GridController } from '../src/grid-controller.js';
+
+interface User {
+  name: {
+    first: string;
+    last: string;
+  };
+  location: {
+    street: string;
+    city: string;
+  };
+}
+
+interface UsersGrid {
+  users: User[];
+}
+
+interface UsersFilter {
+  filter: string;
+}
+
+const usersController: GridController<User, UsersGrid & UsersFilter> = {
+  columns: [
+    {
+      header: '#',
+      textAlign: 'end',
+      width: '60px',
+      flexGrow: 0,
+      renderer: (model) => html`${model.index}`
+    },
+    {
+      header: 'Name',
+      columns: [
+        {
+          header: 'First',
+          renderer: ({ item }, { filter }) => {
+            const match = filter && item.name.first.indexOf(filter) > -1;
+            return match ? html`<b>${item.name.first}</b>` : html`${item.name.first}`;
+          },
+          width: 'calc(20% - 12px)'
+        },
+        {
+          path: 'name.last',
+          width: 'calc(20% - 12px)'
+        }
+      ]
+    },
+    {
+      header: 'Location',
+      columns: [
+        {
+          path: 'location.city',
+          width: 'calc(20% - 12px)'
+        },
+        {
+          path: 'location.state',
+          width: 'calc(20% - 12px)'
+        },
+        {
+          path: 'location.street',
+          width: 'calc(20% - 12px)'
+        }
+      ]
+    }
+  ]
+};
+
+class GridWrapper extends LitElement implements UsersGrid, UsersFilter {
+  @property({ attribute: false }) users!: User[];
+
+  @property({ type: String }) filter = '';
+
+  @property({ type: String }) label = 'Filter first name';
+
+  render(): TemplateResult {
+    return html`
+      <vaadin-text-field
+        label="${this.label}"
+        .value="${this.filter}"
+        @change="${this.onChange}"
+      ></vaadin-text-field>
+      <vaadin-grid
+        .items="${this.users}"
+        ...="${controller(usersController, this, this.filter)}"
+      ></vaadin-grid>
+    `;
+  }
+
+  firstUpdated() {
+    fetch('./data.json')
+      .then((r) => r.json())
+      .then((data) => {
+        this.users = data;
+      });
+  }
+
+  onChange(event: Event) {
+    this.filter = (event.target as TextFieldElement).value;
+  }
+}
+
+customElements.define('grid-wrapper', GridWrapper);
