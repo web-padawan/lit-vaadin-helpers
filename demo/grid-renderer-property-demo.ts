@@ -5,8 +5,8 @@ import '@vaadin/vaadin-grid/vaadin-grid-column-group';
 import '@vaadin/vaadin-text-field';
 import type { TextFieldElement } from '@vaadin/vaadin-text-field';
 import type { User, HasFilter } from './types';
-import type { GridRenderer } from '../src/grid-renderer';
-import '../src/grid-renderer';
+import type { GridRenderer } from '../src/grid-renderer-property';
+import '../src/grid-renderer-property';
 
 const indexRenderer: GridRenderer<User, HasFilter> = (model) => html`${model.index}`;
 
@@ -16,7 +16,7 @@ const firstNameRenderer: GridRenderer<User, HasFilter> = (model, { filter }) => 
   return match ? html`<b>${name}</b>` : html`${name}`;
 };
 
-class GridRendererDemo extends LitElement implements HasFilter {
+class GridRendererPropertyDemo extends LitElement implements HasFilter {
   @property({ attribute: false }) users!: User[];
 
   @property({ type: String }) filter = '';
@@ -68,4 +68,4 @@ class GridRendererDemo extends LitElement implements HasFilter {
   }
 }
 
-customElements.define('grid-renderer-demo', GridRendererDemo);
+customElements.define('grid-renderer-property-demo', GridRendererPropertyDemo);
