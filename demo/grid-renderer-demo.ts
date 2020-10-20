@@ -1,10 +1,12 @@
 import { LitElement, html, property, TemplateResult } from 'lit-element';
+import { guard } from 'lit-html/directives/guard';
 import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-grid/vaadin-grid-column-group';
 import '@vaadin/vaadin-text-field';
 import type { TextFieldElement } from '@vaadin/vaadin-text-field';
 import type { User, HasFilter } from './types';
-import { bodyRenderer, GridRenderer } from '../src/grid-renderer';
+import type { GridRenderer } from '../src/grid-renderer';
+import '../src/grid-renderer';
 
 const indexRenderer: GridRenderer<User, HasFilter> = (model) => html`${model.index}`;
 
@@ -34,13 +36,13 @@ class GridRendererDemo extends LitElement implements HasFilter {
           flex-grow="0"
           width="60px"
           text-align="end"
-          ...="${bodyRenderer(indexRenderer)}"
+          .litRenderer="${guard([], () => indexRenderer)}"
         ></vaadin-grid-column>
         <vaadin-grid-column-group header="Name">
           <vaadin-grid-column
             header="First"
             width="calc(20% - 12px)"
-            ...="${bodyRenderer(firstNameRenderer, this.filter)}"
+            .litRenderer="${guard([this.filter], () => firstNameRenderer)}"
           ></vaadin-grid-column>
           <vaadin-grid-column path="name.last" width="calc(20% - 12px)"></vaadin-grid-column>
         </vaadin-grid-column-group>
