@@ -20,6 +20,7 @@ export interface ColumnBaseController {
   textAlign?: 'start' | 'center' | 'end' | null;
   width?: string;
   flexGrow?: number;
+  autoWidth?: boolean;
 }
 
 export interface ColumnGroupController<M, H> extends ColumnBaseController {
@@ -73,8 +74,14 @@ class Controller<T, H> {
       // based on the host element state, for example `hidden` property.
       // Store these functions to call them later in `update()` method.
       element.resizable = data.resizable;
-      element.frozen = data.frozen as boolean;
-      element.hidden = data.hidden as boolean;
+
+      if (data.frozen != null) {
+        element.frozen = data.frozen;
+      }
+
+      if (data.hidden != null) {
+        element.hidden = data.hidden;
+      }
     };
 
     const setColumnTree = (
@@ -91,6 +98,7 @@ class Controller<T, H> {
           setColumnProps(element, data);
           setColumnTree(data.columns, element);
         } else {
+          // TODO: add support for filter, sort and tree columns.
           element = document.createElement('vaadin-grid-column');
           parent.appendChild(element);
 
@@ -103,6 +111,10 @@ class Controller<T, H> {
 
           if (data.flexGrow !== undefined) {
             element.setAttribute('flex-grow', `${data.flexGrow}`);
+          }
+
+          if (data.autoWidth != null) {
+            element.autoWidth = data.autoWidth;
           }
 
           if ('path' in data) {
@@ -121,6 +133,8 @@ class Controller<T, H> {
     };
 
     setColumnTree(config.columns, grid);
+
+    // TODO: add support for row details.
   }
 
   update(): void {
