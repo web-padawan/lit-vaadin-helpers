@@ -4,7 +4,7 @@ import '@vaadin/vaadin-grid/vaadin-grid-column-group';
 import '@vaadin/vaadin-text-field';
 import type { TextFieldElement } from '@vaadin/vaadin-text-field';
 import type { User, HasFilter } from './types';
-import { controller, GridController } from '../src/grid-controller.js';
+import { controller, GridController } from '../src/grid-controller-spread.js';
 
 const usersController: GridController<User, HasFilter> = {
   columns: [
@@ -53,7 +53,7 @@ const usersController: GridController<User, HasFilter> = {
   ]
 };
 
-class GridControllerDemo extends LitElement implements HasFilter {
+class GridControllerSpreadDemo extends LitElement implements HasFilter {
   @property({ attribute: false }) users!: User[];
 
   @property({ type: String }) filter = '';
@@ -87,4 +87,4 @@ class GridControllerDemo extends LitElement implements HasFilter {
   }
 }
 
-customElements.define('grid-controller-demo', GridControllerDemo);
+customElements.define('grid-controller-spread-demo', GridControllerSpreadDemo);
