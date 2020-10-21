@@ -1,5 +1,11 @@
 import { DirectiveFn, directive, Part, PropertyPart, TemplateResult, render } from 'lit-html';
-import type { GridBodyRenderer, GridElement, GridItemModel } from '@vaadin/vaadin-grid';
+import type {
+  GridBodyRenderer,
+  GridElement,
+  GridHeaderFooterRenderer,
+  GridItemModel,
+  GridRowDetailsRenderer
+} from '@vaadin/vaadin-grid';
 import type { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column';
 
 export interface GridModel<T> {
@@ -11,40 +17,69 @@ export interface GridModel<T> {
   detailsOpened?: boolean;
 }
 
-export type GridRenderer<M, H> = (model: GridModel<M>, host: H) => TemplateResult;
+export type GridLitHeaderFooterRenderer<H> = (host: H) => TemplateResult;
+
+export type GridLitRenderer<T, H> = (model: GridModel<T>, host: H) => TemplateResult;
 
 const partToRenderer = new WeakMap();
 const previousValues = new WeakMap<Part, unknown>();
 
-// TODO: add directives to support header and footer renderers, and row details renderer.
+const PROPERTIES = ['renderer', 'headerRenderer', 'footerRenderer', 'rowDetailsRenderer'];
 
-export const bodyRenderer = directive(
-  <T, H>(renderer: GridRenderer<T, H>, value?: unknown): DirectiveFn => async (part: Part) => {
+export const gridRenderer = directive(
+  <T, H>(
+    renderer: GridLitRenderer<T, H> | GridLitHeaderFooterRenderer<H>,
+    value?: unknown
+  ): DirectiveFn => async (part: Part) => {
     const propertyPart = part as PropertyPart;
-    if (!(part instanceof PropertyPart) || propertyPart.committer.name !== 'renderer') {
-      throw new Error('Only supports binding to renderer property');
+    if (!(part instanceof PropertyPart) || PROPERTIES.indexOf(propertyPart.committer.name) === -1) {
+      throw new Error(`Only supports binding to ${PROPERTIES.join(', ')} properties`);
     }
 
     const cached = partToRenderer.get(part);
+    const element = propertyPart.committer.element as GridElement | GridColumnElement;
     if (!cached) {
-      const column = propertyPart.committer.element as GridColumnElement;
-
-      // TODO: refactor to get host from directive metadata.
-      // See https://github.com/Polymer/lit-html/issues/1143
-      if (!column.isConnected) {
+      if (!element.isConnected) {
         await Promise.resolve();
       }
 
-      const grid = column._grid as GridElement;
-      const host = (grid.getRootNode() as ShadowRoot).host as HTMLElement & H;
+      let grid: GridElement;
+      let rendererFn: GridBodyRenderer | GridHeaderFooterRenderer | GridRowDetailsRenderer;
 
-      const rendererFn: GridBodyRenderer = (
-        root: HTMLElement,
-        _column?: GridColumnElement,
-        model?: GridItemModel
-      ) => {
-        render(renderer(model as GridModel<T>, host), root, { eventContext: host });
-      };
+      const prop = propertyPart.committer.name;
+
+      if (prop === 'rowDetailsRenderer') {
+        // TODO: refactor to get host from directive metadata.
+        // See https://github.com/Polymer/lit-html/issues/1143
+        grid = element as GridElement;
+        const host = (grid.getRootNode() as ShadowRoot).host as HTMLElement & H;
+
+        // row details renderer
+        rendererFn = (root: HTMLElement, _grid?: GridElement, model?: GridItemModel) => {
+          render((renderer as GridLitRenderer<T, H>)(model as GridModel<T>, host), root, {
+            eventContext: host
+          });
+        };
+      } else {
+        grid = (element as GridColumnElement)._grid as GridElement;
+        const host = (grid.getRootNode() as ShadowRoot).host as HTMLElement & H;
+
+        if (prop === 'renderer') {
+          // body renderer
+          rendererFn = (root: HTMLElement, _column?: GridColumnElement, model?: GridItemModel) => {
+            render((renderer as GridLitRenderer<T, H>)(model as GridModel<T>, host), root, {
+              eventContext: host
+            });
+          };
+        } else {
+          // header / footer renderer
+          rendererFn = (root: HTMLElement) => {
+            render((renderer as GridLitHeaderFooterRenderer<H>)(host), root, {
+              eventContext: host
+            });
+          };
+        }
+      }
 
       part.setValue(rendererFn);
       part.commit();

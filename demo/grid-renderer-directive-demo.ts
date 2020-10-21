@@ -4,11 +4,11 @@ import '@vaadin/vaadin-grid/vaadin-grid-column-group';
 import '@vaadin/vaadin-text-field';
 import type { TextFieldElement } from '@vaadin/vaadin-text-field';
 import type { User, HasFilter } from './types';
-import { bodyRenderer, GridRenderer } from '../src/grid-renderer-directive';
+import { gridRenderer, GridLitRenderer } from '../src/grid-renderer-directive';
 
-const indexRenderer: GridRenderer<User, HasFilter> = (model) => html`${model.index}`;
+const indexRenderer: GridLitRenderer<User, HasFilter> = (model) => html`${model.index}`;
 
-const firstNameRenderer: GridRenderer<User, HasFilter> = (model, { filter }) => {
+const firstNameRenderer: GridLitRenderer<User, HasFilter> = (model, { filter }) => {
   const name = model.item.name.first;
   const match = filter && name.indexOf(filter) > -1;
   return match ? html`<b>${name}</b>` : html`${name}`;
@@ -34,13 +34,13 @@ class GridRendererDirectiveDemo extends LitElement implements HasFilter {
           flex-grow="0"
           width="60px"
           text-align="end"
-          .renderer="${bodyRenderer(indexRenderer)}"
+          .renderer="${gridRenderer(indexRenderer)}"
         ></vaadin-grid-column>
         <vaadin-grid-column-group header="Name">
           <vaadin-grid-column
             header="First"
             width="calc(20% - 12px)"
-            .renderer="${bodyRenderer(firstNameRenderer, [this.filter])}"
+            .renderer="${gridRenderer(firstNameRenderer, [this.filter])}"
           ></vaadin-grid-column>
           <vaadin-grid-column path="name.last" width="calc(20% - 12px)"></vaadin-grid-column>
         </vaadin-grid-column-group>

@@ -20,7 +20,7 @@ customElements.whenDefined('vaadin-grid-column').then(() => {
   const Column = customElements.get('vaadin-grid-column') as PolymerElementConstructor;
 
   Object.defineProperty(Column.prototype, 'litRenderer', {
-    async set(renderer) {
+    async set<T, H>(renderer: GridRenderer<T, H>) {
       const column = this as GridColumnElement;
       const cached = columnToRenderer.get(column);
 
@@ -30,7 +30,7 @@ customElements.whenDefined('vaadin-grid-column').then(() => {
 
       if (!cached) {
         const grid = column._grid as GridElement;
-        const host = (grid.getRootNode() as ShadowRoot).host as HTMLElement;
+        const host = (grid.getRootNode() as ShadowRoot).host as HTMLElement & H;
 
         column.renderer = (
           root: HTMLElement,
