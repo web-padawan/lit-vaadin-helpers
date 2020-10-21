@@ -34,13 +34,13 @@ class GridRendererDirectiveDemo extends LitElement implements HasFilter {
           flex-grow="0"
           width="60px"
           text-align="end"
-          ...="${bodyRenderer(indexRenderer)}"
+          .renderer="${bodyRenderer(indexRenderer)}"
         ></vaadin-grid-column>
         <vaadin-grid-column-group header="Name">
           <vaadin-grid-column
             header="First"
             width="calc(20% - 12px)"
-            ...="${bodyRenderer(firstNameRenderer, [this.filter])}"
+            .renderer="${bodyRenderer(firstNameRenderer, [this.filter])}"
           ></vaadin-grid-column>
           <vaadin-grid-column path="name.last" width="calc(20% - 12px)"></vaadin-grid-column>
         </vaadin-grid-column-group>

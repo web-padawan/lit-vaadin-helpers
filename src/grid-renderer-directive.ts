@@ -1,5 +1,5 @@
-import { directive, Part, PropertyPart, TemplateResult, render } from 'lit-html';
-import type { GridElement, GridItemModel } from '@vaadin/vaadin-grid';
+import { DirectiveFn, directive, Part, PropertyPart, TemplateResult, render } from 'lit-html';
+import type { GridBodyRenderer, GridElement, GridItemModel } from '@vaadin/vaadin-grid';
 import type { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column';
 
 export interface GridModel<T> {
@@ -16,11 +16,13 @@ export type GridRenderer<M, H> = (model: GridModel<M>, host: H) => TemplateResul
 const partToRenderer = new WeakMap();
 const previousValues = new WeakMap<Part, unknown>();
 
+// TODO: add directives to support header and footer renderers, and row details renderer.
+
 export const bodyRenderer = directive(
-  <T, H>(renderer: GridRenderer<T, H>, value?: unknown) => async (part: Part) => {
+  <T, H>(renderer: GridRenderer<T, H>, value?: unknown): DirectiveFn => async (part: Part) => {
     const propertyPart = part as PropertyPart;
-    if (!(part instanceof PropertyPart) || propertyPart.committer.name !== '..') {
-      throw new Error('Only supports ...="" syntax');
+    if (!(part instanceof PropertyPart) || propertyPart.committer.name !== 'renderer') {
+      throw new Error('Only supports binding to renderer property');
     }
 
     const cached = partToRenderer.get(part);
@@ -36,12 +38,18 @@ export const bodyRenderer = directive(
       const grid = column._grid as GridElement;
       const host = (grid.getRootNode() as ShadowRoot).host as HTMLElement & H;
 
-      // TODO: support header and footer renderers / row details renderer.
-      column.renderer = (root: HTMLElement, _column?: GridColumnElement, model?: GridItemModel) => {
+      const rendererFn: GridBodyRenderer = (
+        root: HTMLElement,
+        _column?: GridColumnElement,
+        model?: GridItemModel
+      ) => {
         render(renderer(model as GridModel<T>, host), root, { eventContext: host });
       };
 
-      partToRenderer.set(part, { column, grid, host });
+      part.setValue(rendererFn);
+      part.commit();
+
+      partToRenderer.set(part, { grid });
     } else {
       // NOTE: code below is copied from the "guard" directive.
       // https://github.com/Polymer/lit-html/blob/master/src/directives/guard.ts
