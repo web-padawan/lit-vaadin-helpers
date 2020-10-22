@@ -13,15 +13,16 @@ class StatusSelector extends LitElement {
   @property({ attribute: false }) statuses = [
     { name: 'waiting' },
     { name: 'error' },
-    { name: 'completed' },
+    { name: 'completed' }
   ];
 
   @property({ type: String }) label = 'Status';
 
   render() {
     return html`
-      <vaadin-select label="${this.label}">
-        ${renderer(
+      <vaadin-select
+        label="${this.label}"
+        .renderer="${renderer(
           this.statuses,
           () => html`
             <vaadin-list-box>
@@ -30,7 +31,8 @@ class StatusSelector extends LitElement {
               })}
             </vaadin-list-box>
           `
-        )}
+        )}"
+      >
       </vaadin-select>
     `;
   }
