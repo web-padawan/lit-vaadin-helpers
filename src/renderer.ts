@@ -1,53 +1,68 @@
-import { directive, DirectiveFn, render, Part, PropertyPart, TemplateResult } from 'lit-html';
+import {
+  directive,
+  Directive,
+  noChange,
+  PartInfo,
+  PropertyPart,
+  PROPERTY_PART,
+  render,
+  TemplateResult
+} from 'lit-html';
 
-const partToRenderer = new WeakMap();
-const previousValues = new WeakMap();
+interface HasRenderer {
+  render(): void;
+}
 
-export const renderer = directive(
-  (value: unknown, f: () => TemplateResult): DirectiveFn => async (part: Part) => {
-    if (!(part instanceof PropertyPart) || part.committer.name !== 'renderer') {
+// A sentinel that indicates renderer() hasn't been initialized
+const initialValue = {};
+class RendererDirective extends Directive {
+  previousValue: unknown = initialValue;
+
+  constructor(part: PartInfo) {
+    super();
+    if (part.type !== PROPERTY_PART || part.name !== 'renderer') {
       throw new Error('Only supports binding to renderer property');
     }
+  }
 
-    const cached = partToRenderer.get(part);
-    const element = part.committer.element;
+  render(_value: unknown, renderer: () => TemplateResult) {
+    return renderer();
+  }
 
-    if (!cached) {
-      if (!element.isConnected) {
-        await Promise.resolve();
+  update(part: PropertyPart, [value, renderer]: Parameters<this['render']>) {
+    const element = part.element as HTMLElement;
+
+    if (Array.isArray(value)) {
+      // Dirty-check arrays by item
+      if (
+        Array.isArray(this.previousValue) &&
+        this.previousValue.length === value.length &&
+        value.every((v, i) => v === (this.previousValue as Array<unknown>)[i])
+      ) {
+        return noChange;
       }
-
-      const host = (element.getRootNode() as ShadowRoot).host as HTMLElement;
-
-      part.setValue((root: HTMLElement) => {
-        render(f(), root, { eventContext: host });
-      });
-      part.commit();
-      partToRenderer.set(part, { element });
-    } else {
-      // NOTE: code below is copied from the "guard" directive.
-      // https://github.com/Polymer/lit-html/blob/master/src/directives/guard.ts
-      const previousValue = previousValues.get(part);
-
-      if (Array.isArray(value)) {
-        // Dirty-check arrays by item
-        if (
-          Array.isArray(previousValue) &&
-          previousValue.length === value.length &&
-          value.every((v, i) => v === previousValue[i])
-        ) {
-          return;
-        }
-      } else if (previousValue === value && (value !== undefined || previousValues.has(part))) {
-        // Dirty-check non-arrays by identity
-        return;
-      }
-
-      cached.element.render();
+    } else if (this.previousValue === value) {
+      // Dirty-check non-arrays by identity
+      return noChange;
     }
+
+    const firstRender = this.previousValue === initialValue;
 
     // Copy the value if it's an array so that if it's mutated we don't forget
     // what the previous values were.
-    previousValues.set(part, Array.isArray(value) ? Array.from(value) : value);
+    this.previousValue = Array.isArray(value) ? Array.from(value) : value;
+
+    if (firstRender) {
+      const host = (element.getRootNode() as ShadowRoot).host;
+
+      return (root: HTMLElement) => {
+        render(this.render(value, renderer), root, { eventContext: host });
+      };
+    } else {
+      (element as HTMLElement & HasRenderer).render();
+      return noChange;
+    }
   }
-);
+}
+
+export const renderer = directive(RendererDirective);

@@ -1,12 +1,23 @@
-import { LitElement, html, property, TemplateResult } from 'lit-element';
+import { LitElement, html, TemplateResult } from 'lit-element';
+import { property } from 'lit-element/lib/decorators/property.js';
 import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-grid/vaadin-grid-column-group';
 import '@vaadin/vaadin-text-field';
 import type { TextFieldElement } from '@vaadin/vaadin-text-field';
-import type { User, HasFilter } from './types';
-import { gridRenderer, GridModel } from '../src/grid-renderer-directive';
+import { gridRenderer } from '../src/grid-renderer';
 
-class GridRendererDirectiveDemo extends LitElement implements HasFilter {
+interface User {
+  name: {
+    first: string;
+    last: string;
+  };
+  location: {
+    street: string;
+    city: string;
+  };
+}
+
+class GridRendererDemo extends LitElement implements HasFilter {
   @property({ attribute: false }) users!: User[];
 
   @property({ type: String }) filter = '';
@@ -26,16 +37,17 @@ class GridRendererDirectiveDemo extends LitElement implements HasFilter {
           flex-grow="0"
           width="60px"
           text-align="end"
-          .renderer="${gridRenderer((model: GridModel<User>) => html`${model.index}`)}"
+          .renderer="${gridRenderer((model) => html`${model.index}`)}"
         ></vaadin-grid-column>
         <vaadin-grid-column-group header="Name">
           <vaadin-grid-column
             header="First"
             width="calc(20% - 12px)"
             .renderer="${gridRenderer(
-              (model: GridModel<User>, { filter }: HasFilter) => {
-                const name = model.item.name.first;
-                const match = filter && name.indexOf(filter) > -1;
+              (model) => {
+                // TODO: fix directive to accept generic type
+                const name = (model.item as User).name.first;
+                const match = this.filter && name.indexOf(this.filter) > -1;
                 return match ? html`<b>${name}</b>` : html`${name}`;
               },
               [this.filter]
@@ -65,4 +77,4 @@ class GridRendererDirectiveDemo extends LitElement implements HasFilter {
   }
 }
 
-customElements.define('grid-renderer-directive-demo', GridRendererDirectiveDemo);
+customElements.define('grid-renderer-demo', GridRendererDemo);

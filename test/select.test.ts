@@ -1,7 +1,8 @@
 import { expect } from '@esm-bundle/chai';
 import sinon from 'sinon';
 import { fixture } from '@open-wc/testing-helpers';
-import { LitElement, html, property } from 'lit-element';
+import { LitElement, html } from 'lit-element';
+import { property } from 'lit-element/lib/decorators/property.js';
 import type { SelectElement } from '@vaadin/vaadin-select';
 import type { OverlayElement } from '@vaadin/vaadin-overlay';
 import '@vaadin/vaadin-select';
@@ -47,7 +48,7 @@ describe('vaadin-select renderer', () => {
   let content: HTMLElement;
 
   beforeEach(async () => {
-    wrapper = await fixture(html`<status-selector></status-selector>`);
+    wrapper = await fixture(`<status-selector></status-selector>`);
     select = wrapper.renderRoot.querySelector('vaadin-select') as SelectElement;
     overlay = select.shadowRoot!.querySelector('vaadin-select-overlay') as OverlayElement;
     content = overlay.content as HTMLElement;
