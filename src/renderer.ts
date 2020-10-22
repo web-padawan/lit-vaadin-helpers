@@ -5,9 +5,9 @@ import {
   PartInfo,
   PropertyPart,
   PROPERTY_PART,
-  render,
-  TemplateResult
+  render
 } from 'lit-html';
+import type { Renderer } from './types';
 
 interface HasRenderer {
   render(): void;
@@ -25,7 +25,7 @@ class RendererDirective extends Directive {
     }
   }
 
-  render(_value: unknown, renderer: () => TemplateResult) {
+  render(_value: unknown, renderer: Renderer) {
     return renderer();
   }
 

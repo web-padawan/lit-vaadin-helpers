@@ -10,6 +10,7 @@ import {
 } from 'lit-html';
 import type { GridElement, GridItemModel } from '@vaadin/vaadin-grid';
 import type { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column';
+import type { Renderer } from './types';
 
 export interface GridModel<T> {
   index: number;
@@ -19,8 +20,6 @@ export interface GridModel<T> {
   level?: number;
   detailsOpened?: boolean;
 }
-
-export type GridHeaderFooterRenderer = () => TemplateResult;
 
 export type GridRenderer<T> = (model: GridModel<T>) => TemplateResult;
 
@@ -48,7 +47,7 @@ class GridRendererDirective extends Directive {
 
   update<T, R extends GridRenderer<T>>(
     part: PropertyPart,
-    [renderer, value]: [R | GridHeaderFooterRenderer, unknown]
+    [renderer, value]: [R | Renderer, unknown]
   ) {
     const element = part.element as GridElement | GridColumnElement;
 
@@ -92,7 +91,7 @@ class GridRendererDirective extends Directive {
         };
       } else {
         grid = (element as GridColumnElement)._grid as GridElement;
-        const host = (grid.getRootNode() as ShadowRoot).host as HTMLElement & H;
+        const host = (grid.getRootNode() as ShadowRoot).host as HTMLElement;
 
         if (prop === 'renderer') {
           // body renderer
@@ -104,7 +103,7 @@ class GridRendererDirective extends Directive {
         } else {
           // header / footer renderer
           result = (root: HTMLElement) => {
-            render((renderer as GridHeaderFooterRenderer)(), root, {
+            render((renderer as Renderer)(), root, {
               eventContext: host
             });
           };

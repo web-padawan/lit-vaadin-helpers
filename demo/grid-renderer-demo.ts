@@ -17,7 +17,7 @@ interface User {
   };
 }
 
-class GridRendererDemo extends LitElement implements HasFilter {
+class GridRendererDemo extends LitElement {
   @property({ attribute: false }) users!: User[];
 
   @property({ type: String }) filter = '';
