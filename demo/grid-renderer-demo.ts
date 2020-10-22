@@ -4,7 +4,7 @@ import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-grid/vaadin-grid-column-group';
 import '@vaadin/vaadin-text-field';
 import type { TextFieldElement } from '@vaadin/vaadin-text-field';
-import { gridRenderer } from '../src/grid-renderer';
+import { gridRenderer, GridModel } from '../src/grid-renderer';
 
 interface User {
   name: {
@@ -37,16 +37,15 @@ class GridRendererDemo extends LitElement implements HasFilter {
           flex-grow="0"
           width="60px"
           text-align="end"
-          .renderer="${gridRenderer((model) => html`${model.index}`)}"
+          .renderer="${gridRenderer((model: GridModel<User>) => html`${model.index}`)}"
         ></vaadin-grid-column>
         <vaadin-grid-column-group header="Name">
           <vaadin-grid-column
             header="First"
             width="calc(20% - 12px)"
             .renderer="${gridRenderer(
-              (model) => {
-                // TODO: fix directive to accept generic type
-                const name = (model.item as User).name.first;
+              (model: GridModel<User>) => {
+                const name = model.item.name.first;
                 const match = this.filter && name.indexOf(this.filter) > -1;
                 return match ? html`<b>${name}</b>` : html`${name}`;
               },

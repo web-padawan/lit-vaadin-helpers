@@ -42,11 +42,14 @@ class GridRendererDirective extends Directive {
   }
 
   // Not used but has to be defined to prevent TypeScript compilation errors.
-  render<T>(renderer: GridRenderer<T>, _value?: unknown) {
+  render<T, R extends GridRenderer<T>>(renderer: R, _value?: unknown) {
     return renderer;
   }
 
-  update<T>(part: PropertyPart, [renderer, value]: [GridRenderer<T>, unknown]) {
+  update<T, R extends GridRenderer<T>>(
+    part: PropertyPart,
+    [renderer, value]: [R | GridHeaderFooterRenderer, unknown]
+  ) {
     const element = part.element as GridElement | GridColumnElement;
 
     if (Array.isArray(value)) {
@@ -83,7 +86,7 @@ class GridRendererDirective extends Directive {
 
         // row details renderer
         result = (root: HTMLElement, _grid?: GridElement, model?: GridItemModel) => {
-          render((renderer as GridRenderer<T>)(model as GridModel<T>), root, {
+          render(this.render<T, R>(renderer as R)(model as GridModel<T>), root, {
             eventContext: host
           });
         };
@@ -94,7 +97,7 @@ class GridRendererDirective extends Directive {
         if (prop === 'renderer') {
           // body renderer
           result = (root: HTMLElement, _column?: GridColumnElement, model?: GridItemModel) => {
-            render((renderer as GridRenderer<T>)(model as GridModel<T>), root, {
+            render(this.render<T, R>(renderer as R)(model as GridModel<T>), root, {
               eventContext: host
             });
           };
