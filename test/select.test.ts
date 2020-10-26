@@ -24,7 +24,6 @@ class StatusSelector extends LitElement {
       <vaadin-select
         label="${this.label}"
         .renderer="${renderer(
-          this.statuses,
           () => html`
             <vaadin-list-box>
               ${this.statuses.map(
@@ -33,7 +32,8 @@ class StatusSelector extends LitElement {
                 </vaadin-item>`
               )}
             </vaadin-list-box>
-          `
+          `,
+          this.statuses
         )}"
       >
       </vaadin-select>

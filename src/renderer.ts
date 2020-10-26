@@ -17,12 +17,12 @@ class RendererDirective extends RendererBase {
     }
   }
 
-  render(_value: unknown, renderer: Renderer) {
+  render(renderer: Renderer, _value?: unknown) {
     return renderer();
   }
 
-  update(part: PropertyPart, [value, renderer]: [unknown, Renderer]) {
-    if (this._initialize(part, [value, renderer])) {
+  update(part: PropertyPart, [renderer, value]: [Renderer, unknown]) {
+    if (this._initialize(part, [renderer, value])) {
       const element = part.element as HTMLElement & HasRenderer;
       const firstRender = this.isFirstRender();
 
@@ -38,7 +38,7 @@ class RendererDirective extends RendererBase {
         const host = (element.getRootNode() as ShadowRoot).host;
 
         element.renderer = (root: HTMLElement) => {
-          render(this.render(value, renderer), root, { eventContext: host });
+          render(this.render(renderer, value), root, { eventContext: host });
         };
       } else {
         (element as HTMLElement & HasRenderer).render();
@@ -51,13 +51,13 @@ class RendererDirective extends RendererBase {
     return noop;
   }
 
-  private _initialize(part: PropertyPart, [value, renderer]: [unknown, Renderer]) {
+  private _initialize(part: PropertyPart, [renderer, value]: [Renderer, unknown]) {
     const element = part.element;
     if (element.isConnected) {
       return true;
     }
     Promise.resolve().then(() => {
-      this.update(part, [value, renderer]);
+      this.update(part, [renderer, value]);
     });
     return false;
   }
