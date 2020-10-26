@@ -21,6 +21,8 @@ export interface GridModel<T> {
   detailsOpened?: boolean;
 }
 
+const noop = () => {}; // eslint-disable-line @typescript-eslint/no-empty-function
+
 export type GridRenderer<T> = (model: GridModel<T>) => TemplateResult;
 
 const PROPERTIES = ['renderer', 'headerRenderer', 'footerRenderer', 'rowDetailsRenderer'];
@@ -43,61 +45,85 @@ class GridRendererDirective extends RendererBase {
     part: PropertyPart,
     [renderer, value]: [R | Renderer, unknown]
   ) {
-    const element = part.element as GridElement | GridColumnElement;
-    const firstRender = this.isFirstRender();
+    if (this._initialize<T, R>(part, [renderer, value])) {
+      const element = part.element as GridElement | GridColumnElement;
+      const firstRender = this.isFirstRender();
 
-    if (!this.hasChanged(value)) {
-      return noChange;
-    }
+      if (!this.hasChanged(value)) {
+        return noChange;
+      }
 
-    this.saveValue(value);
+      this.saveValue(value);
 
-    let grid: GridElement;
+      let grid: GridElement;
 
-    if (firstRender) {
-      let result;
-      const prop = part.name;
+      if (firstRender) {
+        let result;
+        const prop = part.name;
 
-      if (prop === 'rowDetailsRenderer') {
-        grid = element as GridElement;
+        if (prop === 'rowDetailsRenderer') {
+          grid = element as GridElement;
 
-        // TODO: refactor to get host from directive metadata.
-        // See https://github.com/Polymer/lit-html/issues/1143
-        const host = (grid.getRootNode() as ShadowRoot).host as HTMLElement;
+          // TODO: refactor to get host from directive metadata.
+          // See https://github.com/Polymer/lit-html/issues/1143
+          const host = (grid.getRootNode() as ShadowRoot).host as HTMLElement;
 
-        // row details renderer
-        result = (root: HTMLElement, _grid?: GridElement, model?: GridItemModel) => {
-          render(this.render<T, R>(renderer as R)(model as GridModel<T>), root, {
-            eventContext: host
-          });
-        };
-      } else {
-        grid = (element as GridColumnElement)._grid as GridElement;
-        const host = (grid.getRootNode() as ShadowRoot).host as HTMLElement;
-
-        if (prop === 'renderer') {
-          // body renderer
-          result = (root: HTMLElement, _column?: GridColumnElement, model?: GridItemModel) => {
+          // row details renderer
+          result = (root: HTMLElement, _grid?: GridElement, model?: GridItemModel) => {
             render(this.render<T, R>(renderer as R)(model as GridModel<T>), root, {
               eventContext: host
             });
           };
         } else {
-          // header / footer renderer
-          result = (root: HTMLElement) => {
-            render((renderer as Renderer)(), root, {
-              eventContext: host
-            });
-          };
+          grid = (element as GridColumnElement)._grid as GridElement;
+          const host = (grid.getRootNode() as ShadowRoot).host as HTMLElement;
+
+          if (prop === 'renderer') {
+            // body renderer
+            result = (root: HTMLElement, _column?: GridColumnElement, model?: GridItemModel) => {
+              render(this.render<T, R>(renderer as R)(model as GridModel<T>), root, {
+                eventContext: host
+              });
+            };
+          } else {
+            // header / footer renderer
+            result = (root: HTMLElement) => {
+              render((renderer as Renderer)(), root, {
+                eventContext: host
+              });
+            };
+          }
         }
+        this.partToGrid.set(part, grid);
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (element as any)[prop] = result;
+      } else {
+        const grid = this.partToGrid.get(part);
+        if (grid) {
+          grid.render();
+        }
+        return noChange;
       }
-      this.partToGrid.set(part, grid);
-      return result;
-    } else {
-      grid = this.partToGrid.get(part) as GridElement;
-      grid.render();
-      return noChange;
     }
+
+    // TODO: stub renderer to prevent errors on initial render,
+    // when we do not yet have a reference to the host element.
+    return noop;
+  }
+
+  private _initialize<T, R extends GridRenderer<T>>(
+    part: PropertyPart,
+    [renderer, value]: [R | Renderer, unknown]
+  ) {
+    const element = part.element as GridElement | GridColumnElement;
+    if (element.isConnected) {
+      return true;
+    }
+    Promise.resolve().then(() => {
+      this.update<T, R>(part, [renderer, value]);
+    });
+    return false;
   }
 }
 

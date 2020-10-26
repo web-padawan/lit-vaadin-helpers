@@ -1,10 +1,13 @@
 import { LitElement, html, TemplateResult } from 'lit-element';
 import { property } from 'lit-element/lib/decorators/property.js';
+import { query } from 'lit-element/lib/decorators/query.js';
 import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-grid/vaadin-grid-column-group';
 import '@vaadin/vaadin-checkbox';
 import '@vaadin/vaadin-text-field';
+import type { CheckboxElement } from '@vaadin/vaadin-checkbox';
 import type { TextFieldElement } from '@vaadin/vaadin-text-field';
+import type { GridElement, GridEventContext } from '@vaadin/vaadin-grid';
 import { gridRenderer, GridModel } from '../src/grid-renderer';
 
 interface User {
@@ -28,6 +31,8 @@ class GridRendererDemo extends LitElement {
   @property({ type: String }) filter = '';
 
   @property({ type: String }) label = 'Filter first name';
+
+  @query('vaadin-grid') grid!: GridElement;
 
   render(): TemplateResult {
     return html`
@@ -74,29 +79,24 @@ class GridRendererDemo extends LitElement {
           flex-grow="0"
           width="90px"
           .renderer="${gridRenderer(
-            (model: GridModel<User>) => {
-              const user = model.item;
-              return html`
-                <vaadin-checkbox
-                  @checked-changed="${(event: CustomEvent) => {
-                    if (event.detail.value) {
-                      // show user details
-                      this.detailsOpened = [...this.detailsOpened, user];
-                    } else if (this.detailsOpened.length) {
-                      // hide user details
-                      this.detailsOpened = this.detailsOpened.filter(
-                        (item) => item.username !== user.username
-                      );
-                    }
-                  }}"
-                ></vaadin-checkbox>
-              `;
-            },
-            [this.detailsOpened]
+            () => html`<vaadin-checkbox @change="${this.toggleDetails}"></vaadin-checkbox>`
           )}"
         ></vaadin-grid-column>
       </vaadin-grid>
     `;
+  }
+
+  toggleDetails(event: CustomEvent) {
+    const target = event.target as CheckboxElement;
+    const context = this.grid.getEventContext(event) as GridEventContext;
+    const user = context.item as User;
+    if (target.checked) {
+      // show user details
+      this.detailsOpened = [...this.detailsOpened, user];
+    } else if (this.detailsOpened.length) {
+      // hide user details
+      this.detailsOpened = this.detailsOpened.filter((item) => item.username !== user.username);
+    }
   }
 
   firstUpdated() {
