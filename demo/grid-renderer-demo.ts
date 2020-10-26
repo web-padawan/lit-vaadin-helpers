@@ -2,6 +2,7 @@ import { LitElement, html, TemplateResult } from 'lit-element';
 import { property } from 'lit-element/lib/decorators/property.js';
 import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-grid/vaadin-grid-column-group';
+import '@vaadin/vaadin-checkbox';
 import '@vaadin/vaadin-text-field';
 import type { TextFieldElement } from '@vaadin/vaadin-text-field';
 import { gridRenderer, GridModel } from '../src/grid-renderer';
@@ -15,10 +16,14 @@ interface User {
     street: string;
     city: string;
   };
+  username: string;
+  phone: string;
 }
 
 class GridRendererDemo extends LitElement {
   @property({ attribute: false }) users!: User[];
+
+  @property({ attribute: false }) detailsOpened: User[] = [];
 
   @property({ type: String }) filter = '';
 
@@ -31,7 +36,13 @@ class GridRendererDemo extends LitElement {
         .value="${this.filter}"
         @change="${this.onChange}"
       ></vaadin-text-field>
-      <vaadin-grid .items="${this.users}">
+      <vaadin-grid
+        .items="${this.users}"
+        .detailsOpenedItems="${this.detailsOpened}"
+        .rowDetailsRenderer="${gridRenderer((model: GridModel<User>) => {
+          return html`User name: ${model.item.username}. Phone: ${model.item.phone}`;
+        })}"
+      >
         <vaadin-grid-column
           header="#"
           flex-grow="0"
@@ -42,7 +53,6 @@ class GridRendererDemo extends LitElement {
         <vaadin-grid-column-group header="Name">
           <vaadin-grid-column
             header="First"
-            width="calc(20% - 12px)"
             .renderer="${gridRenderer(
               (model: GridModel<User>) => {
                 const name = model.item.name.first;
@@ -52,13 +62,39 @@ class GridRendererDemo extends LitElement {
               [this.filter]
             )}"
           ></vaadin-grid-column>
-          <vaadin-grid-column path="name.last" width="calc(20% - 12px)"></vaadin-grid-column>
+          <vaadin-grid-column path="name.last"></vaadin-grid-column>
         </vaadin-grid-column-group>
         <vaadin-grid-column-group header="Location">
-          <vaadin-grid-column path="location.city" width="calc(20% - 12px)"></vaadin-grid-column>
-          <vaadin-grid-column path="location.state" width="calc(20% - 12px)"></vaadin-grid-column>
-          <vaadin-grid-column path="location.street" width="calc(20% - 12px)"></vaadin-grid-column>
+          <vaadin-grid-column path="location.city"></vaadin-grid-column>
+          <vaadin-grid-column path="location.state"></vaadin-grid-column>
+          <vaadin-grid-column path="location.street"></vaadin-grid-column>
         </vaadin-grid-column-group>
+        <vaadin-grid-column
+          header="Details"
+          flex-grow="0"
+          width="90px"
+          .renderer="${gridRenderer(
+            (model: GridModel<User>) => {
+              const user = model.item;
+              return html`
+                <vaadin-checkbox
+                  @checked-changed="${(event: CustomEvent) => {
+                    if (event.detail.value) {
+                      // show user details
+                      this.detailsOpened = [...this.detailsOpened, user];
+                    } else if (this.detailsOpened.length) {
+                      // hide user details
+                      this.detailsOpened = this.detailsOpened.filter(
+                        (item) => item.username !== user.username
+                      );
+                    }
+                  }}"
+                ></vaadin-checkbox>
+              `;
+            },
+            [this.detailsOpened]
+          )}"
+        ></vaadin-grid-column>
       </vaadin-grid>
     `;
   }
