@@ -8,6 +8,7 @@ import {
   TemplateResult
 } from 'lit-html';
 import type { GridElement, GridItemModel } from '@vaadin/vaadin-grid';
+import { microTask } from '@polymer/polymer/lib/utils/async.js';
 import type { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column';
 import { RendererBase } from './renderer-base';
 import type { Renderer } from './types';
@@ -101,7 +102,15 @@ class GridRendererDirective extends RendererBase {
       } else {
         const grid = this.partToGrid.get(part);
         if (grid) {
-          grid.render();
+          // Only call grid.render() once when if the property is changed,
+          // in case if that property is used by several column renderers.
+          this.debounce(
+            grid,
+            () => {
+              grid.render();
+            },
+            microTask
+          );
         }
         return noChange;
       }

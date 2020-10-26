@@ -30,7 +30,7 @@ class GridRendererDemo extends LitElement {
 
   @property({ type: String }) filter = '';
 
-  @property({ type: String }) label = 'Filter first name';
+  @property({ type: String }) label = 'Filter';
 
   @query('vaadin-grid') grid!: GridElement;
 
@@ -67,7 +67,17 @@ class GridRendererDemo extends LitElement {
               [this.filter]
             )}"
           ></vaadin-grid-column>
-          <vaadin-grid-column path="name.last"></vaadin-grid-column>
+          <vaadin-grid-column
+            header="Last"
+            .renderer="${gridRenderer(
+              (model: GridModel<User>) => {
+                const name = model.item.name.last;
+                const match = this.filter && name.indexOf(this.filter) > -1;
+                return match ? html`<b>${name}</b>` : html`${name}`;
+              },
+              [this.filter]
+            )}"
+          ></vaadin-grid-column>
         </vaadin-grid-column-group>
         <vaadin-grid-column-group header="Location">
           <vaadin-grid-column path="location.city"></vaadin-grid-column>
