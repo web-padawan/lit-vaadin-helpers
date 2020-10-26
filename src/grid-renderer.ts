@@ -1,6 +1,5 @@
 import {
   directive,
-  Directive,
   noChange,
   PartInfo,
   PropertyPart,
@@ -10,6 +9,7 @@ import {
 } from 'lit-html';
 import type { GridElement, GridItemModel } from '@vaadin/vaadin-grid';
 import type { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column';
+import { RendererBase } from './renderer-base';
 import type { Renderer } from './types';
 
 export interface GridModel<T> {
@@ -25,13 +25,8 @@ export type GridRenderer<T> = (model: GridModel<T>) => TemplateResult;
 
 const PROPERTIES = ['renderer', 'headerRenderer', 'footerRenderer', 'rowDetailsRenderer'];
 
-// A sentinel that indicates renderer() hasn't been initialized
-const initialValue = {};
-
-class GridRendererDirective extends Directive {
+class GridRendererDirective extends RendererBase {
   partToGrid = new WeakMap<PropertyPart, GridElement>();
-
-  previousValue: unknown = initialValue;
 
   constructor(part: PartInfo) {
     super();
@@ -40,7 +35,6 @@ class GridRendererDirective extends Directive {
     }
   }
 
-  // Not used but has to be defined to prevent TypeScript compilation errors.
   render<T, R extends GridRenderer<T>>(renderer: R, _value?: unknown) {
     return renderer;
   }
@@ -50,26 +44,13 @@ class GridRendererDirective extends Directive {
     [renderer, value]: [R | Renderer, unknown]
   ) {
     const element = part.element as GridElement | GridColumnElement;
+    const firstRender = this.isFirstRender();
 
-    if (Array.isArray(value)) {
-      // Dirty-check arrays by item
-      if (
-        Array.isArray(this.previousValue) &&
-        this.previousValue.length === value.length &&
-        value.every((v, i) => v === (this.previousValue as Array<unknown>)[i])
-      ) {
-        return noChange;
-      }
-    } else if (this.previousValue === value) {
-      // Dirty-check non-arrays by identity
+    if (!this.hasChanged(value)) {
       return noChange;
     }
 
-    const firstRender = this.previousValue === initialValue;
-
-    // Copy the value if it's an array so that if it's mutated we don't forget
-    // what the previous values were.
-    this.previousValue = Array.isArray(value) ? Array.from(value) : value;
+    this.saveValue(value);
 
     let grid: GridElement;
 
@@ -78,9 +59,10 @@ class GridRendererDirective extends Directive {
       const prop = part.name;
 
       if (prop === 'rowDetailsRenderer') {
+        grid = element as GridElement;
+
         // TODO: refactor to get host from directive metadata.
         // See https://github.com/Polymer/lit-html/issues/1143
-        grid = element as GridElement;
         const host = (grid.getRootNode() as ShadowRoot).host as HTMLElement;
 
         // row details renderer

@@ -1,23 +1,12 @@
-import {
-  directive,
-  Directive,
-  noChange,
-  PartInfo,
-  PropertyPart,
-  PROPERTY_PART,
-  render
-} from 'lit-html';
+import { directive, noChange, PartInfo, PropertyPart, PROPERTY_PART, render } from 'lit-html';
+import { RendererBase } from './renderer-base';
 import type { Renderer } from './types';
 
 interface HasRenderer {
   render(): void;
 }
 
-// A sentinel that indicates renderer() hasn't been initialized
-const initialValue = {};
-class RendererDirective extends Directive {
-  previousValue: unknown = initialValue;
-
+class RendererDirective extends RendererBase {
   constructor(part: PartInfo) {
     super();
     if (part.type !== PROPERTY_PART || part.name !== 'renderer') {
@@ -31,28 +20,17 @@ class RendererDirective extends Directive {
 
   update(part: PropertyPart, [value, renderer]: Parameters<this['render']>) {
     const element = part.element as HTMLElement;
+    const firstRender = this.isFirstRender();
 
-    if (Array.isArray(value)) {
-      // Dirty-check arrays by item
-      if (
-        Array.isArray(this.previousValue) &&
-        this.previousValue.length === value.length &&
-        value.every((v, i) => v === (this.previousValue as Array<unknown>)[i])
-      ) {
-        return noChange;
-      }
-    } else if (this.previousValue === value) {
-      // Dirty-check non-arrays by identity
+    if (!this.hasChanged(value)) {
       return noChange;
     }
 
-    const firstRender = this.previousValue === initialValue;
-
-    // Copy the value if it's an array so that if it's mutated we don't forget
-    // what the previous values were.
-    this.previousValue = Array.isArray(value) ? Array.from(value) : value;
+    this.saveValue(value);
 
     if (firstRender) {
+      // TODO: refactor to get host from directive metadata.
+      // See https://github.com/Polymer/lit-html/issues/1143
       const host = (element.getRootNode() as ShadowRoot).host;
 
       return (root: HTMLElement) => {
