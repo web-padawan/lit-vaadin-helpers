@@ -22,15 +22,21 @@ class SelectRendererDemo extends LitElement {
           this.statuses,
           () => html`
             <vaadin-list-box>
-              ${this.statuses.map(({ name }) => {
-                return html`<vaadin-item value="${name}">${name}</vaadin-item>`;
-              })}
+              ${this.statuses.map(
+                ({ name }) => html`<vaadin-item value="${name}" @click="${this.onItemClick}">
+                  ${name}
+                </vaadin-item>`
+              )}
             </vaadin-list-box>
           `
         )}"
       >
       </vaadin-select>
     `;
+  }
+
+  onItemClick(event: Event) {
+    this.dispatchEvent(new CustomEvent('item-click', { detail: { item: event.target } }));
   }
 }
 

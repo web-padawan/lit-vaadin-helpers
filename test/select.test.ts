@@ -27,15 +27,21 @@ class StatusSelector extends LitElement {
           this.statuses,
           () => html`
             <vaadin-list-box>
-              ${this.statuses.map(({ name }) => {
-                return html`<vaadin-item value="${name}">${name}</vaadin-item>`;
-              })}
+              ${this.statuses.map(
+                ({ name }) => html`<vaadin-item value="${name}" @click="${this.onItemClick}">
+                  ${name}
+                </vaadin-item>`
+              )}
             </vaadin-list-box>
           `
         )}"
       >
       </vaadin-select>
     `;
+  }
+
+  onItemClick(event: Event) {
+    this.dispatchEvent(new CustomEvent('item-click', { detail: { item: event.target } }));
   }
 }
 
@@ -80,5 +86,14 @@ describe('vaadin-select renderer', () => {
     wrapper.label = 'New label';
     await wrapper.updateComplete;
     expect(spy.callCount).to.equal(0);
+  });
+
+  it('should support using host methods as event listeners', () => {
+    const spy = sinon.spy();
+    wrapper.addEventListener('item-click', spy);
+    const item = content.querySelector('vaadin-item')!;
+    item.click();
+    expect(spy.callCount).to.equal(1);
+    expect(spy.firstCall.args[0].detail.item).to.deep.equal(item);
   });
 });
