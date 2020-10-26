@@ -9,7 +9,7 @@
     "dev": "npm run watch & npm run serve",
     "lint": "eslint src test --ext .ts --ignore-path .gitignore",
     "serve": "web-dev-server --node-resolve --app-index demo/index.html --open --port 8081",
-    "test": "wtr test/*.ts",
+    "test": "wtr test/*.test.ts",
     "watch": "tsc-watch"
   },
   "dependencies": {
