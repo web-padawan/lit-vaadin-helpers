@@ -100,7 +100,7 @@ class GridRendererDirective extends RendererBase {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (element as any)[prop] = result;
       } else {
-        const grid = this.partToGrid.get(part);
+        grid = this.partToGrid.get(part) as GridElement;
         if (grid) {
           // Only call grid.render() once when if the property is changed,
           // in case if that property is used by several column renderers.
