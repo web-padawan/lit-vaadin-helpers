@@ -24,7 +24,7 @@ export interface GridModel<T> {
 
 const noop = () => {}; // eslint-disable-line @typescript-eslint/no-empty-function
 
-export type GridRenderer<T> = (model: GridModel<T>) => TemplateResult;
+export type GridRenderer<T> = (item: T, model: GridModel<T>) => TemplateResult;
 
 const PROPERTIES = ['renderer', 'headerRenderer', 'footerRenderer', 'rowDetailsRenderer'];
 
@@ -70,8 +70,8 @@ class GridRendererDirective extends RendererBase {
           const host = (grid.getRootNode() as ShadowRoot).host as HTMLElement;
 
           // row details renderer
-          result = (root: HTMLElement, _grid?: GridElement, model?: GridItemModel) => {
-            render(this.render<T, R>(renderer as R)(model as GridModel<T>), root, {
+          result = (root: HTMLElement, _grid: GridElement, model: GridItemModel) => {
+            render(this.render<T, R>(renderer as R)(model.item as T, model as GridModel<T>), root, {
               eventContext: host
             });
           };
@@ -81,10 +81,14 @@ class GridRendererDirective extends RendererBase {
 
           if (prop === 'renderer') {
             // body renderer
-            result = (root: HTMLElement, _column?: GridColumnElement, model?: GridItemModel) => {
-              render(this.render<T, R>(renderer as R)(model as GridModel<T>), root, {
-                eventContext: host
-              });
+            result = (root: HTMLElement, _column: GridColumnElement, model: GridItemModel) => {
+              render(
+                this.render<T, R>(renderer as R)(model.item as T, model as GridModel<T>),
+                root,
+                {
+                  eventContext: host
+                }
+              );
             };
           } else {
             // header / footer renderer

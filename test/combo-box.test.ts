@@ -39,11 +39,11 @@ class UserSelector extends LitElement {
       <vaadin-combo-box
         label="${this.label}"
         .items="${this.users}"
-        .renderer="${comboBoxRenderer((model: ComboBoxModel<User>) => {
-          return html`<b @click="${this.onItemClick}"
-            >${model.item.name.first}${this.separator}${model.item.name.last}</b
-          >`;
-        }, this.separator)}"
+        .renderer="${comboBoxRenderer(
+          ({ name }: User) =>
+            html`<b @click="${this.onItemClick}">${name.first}${this.separator}${name.last}</b>`,
+          this.separator
+        )}"
         item-value-path="name.last"
         item-label-path="name.last"
       ></vaadin-combo-box>

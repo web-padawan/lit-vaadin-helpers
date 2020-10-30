@@ -15,7 +15,7 @@ export interface ComboBoxModel<T> {
   item: T;
 }
 
-export type ComboBoxRenderer<T> = (model: ComboBoxModel<T>) => TemplateResult;
+export type ComboBoxRenderer<T> = (item: T, model: ComboBoxModel<T>) => TemplateResult;
 
 const noop = () => {}; // eslint-disable-line @typescript-eslint/no-empty-function
 
@@ -52,9 +52,13 @@ class ComboBoxRendererDirective extends RendererBase {
           _comboBox: ComboBoxElement,
           model: ComboBoxItemModel
         ) => {
-          render(this.render<T, R>(renderer, value)(model as ComboBoxModel<T>), root, {
-            eventContext: host
-          });
+          render(
+            this.render<T, R>(renderer, value)(model.item as T, model as ComboBoxModel<T>),
+            root,
+            {
+              eventContext: host
+            }
+          );
         };
       } else {
         element.render();

@@ -34,8 +34,7 @@ class ComboBoxRendererDemo extends LitElement {
         label="${this.label}"
         .items="${this.users}"
         .renderer="${comboBoxRenderer(
-          (model: ComboBoxModel<User>) =>
-            html`<b>${model.item.name.first}${this.separator}${model.item.name.last}</b>`,
+          (item: User) => html`<b>${item.name.first}${this.separator}${item.name.last}</b>`,
           this.separator
         )}"
         item-value-path="name.last"
