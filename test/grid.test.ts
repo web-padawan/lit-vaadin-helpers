@@ -45,14 +45,14 @@ class UserInfo extends LitElement {
       <vaadin-grid
         .items="${this.users}"
         .detailsOpenedItems="${this.detailsOpened}"
-        .rowDetailsRenderer="${gridRenderer(
-          (item: User) => html`${item.name.first} ${item.name.last}`
+        .rowDetailsRenderer="${gridRenderer<User>(
+          (item) => html`${item.name.first} ${item.name.last}`
         )}"
       >
         <vaadin-grid-column
           header="First"
-          .renderer="${gridRenderer(
-            (item: User) => {
+          .renderer="${gridRenderer<User>(
+            (item) => {
               const name = item.name.first;
               const match = this.filter && name.indexOf(this.filter) > -1;
               return match ? html`<b>${name}</b>` : html`${name}`;
@@ -62,8 +62,8 @@ class UserInfo extends LitElement {
         ></vaadin-grid-column>
         <vaadin-grid-column
           header="Last"
-          .renderer="${gridRenderer(
-            (item: User) => {
+          .renderer="${gridRenderer<User>(
+            (item) => {
               const name = item.name.last;
               const match = this.filter && name.indexOf(this.filter) > -1;
               return match ? html`<b>${name}</b>` : html`${name}`;

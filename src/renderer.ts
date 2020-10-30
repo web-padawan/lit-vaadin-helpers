@@ -17,6 +17,7 @@ class RendererDirective extends RendererBase {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   render(renderer: Renderer, _value?: unknown) {
     return renderer();
   }

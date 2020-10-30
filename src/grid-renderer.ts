@@ -38,15 +38,13 @@ class GridRendererDirective extends RendererBase {
     }
   }
 
-  render<T, R extends GridRenderer<T>>(renderer: R, _value?: unknown) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  render<T>(renderer: GridRenderer<T>, _value?: unknown) {
     return renderer;
   }
 
-  update<T, R extends GridRenderer<T>>(
-    part: PropertyPart,
-    [renderer, value]: [R | Renderer, unknown]
-  ) {
-    if (this._initialize<T, R>(part, [renderer, value])) {
+  update<T>(part: PropertyPart, [renderer, value]: [GridRenderer<T> | Renderer, unknown]) {
+    if (this._initialize<T>(part, [renderer, value])) {
       const element = part.element as GridElement | GridColumnElement;
       const firstRender = this.isFirstRender();
 
@@ -71,7 +69,7 @@ class GridRendererDirective extends RendererBase {
 
           // row details renderer
           result = (root: HTMLElement, _grid: GridElement, model: GridItemModel) => {
-            render(this.render<T, R>(renderer as R)(model.item as T, model as GridModel<T>), root, {
+            render(renderer(model.item as T, model as GridModel<T>), root, {
               eventContext: host
             });
           };
@@ -82,13 +80,9 @@ class GridRendererDirective extends RendererBase {
           if (prop === 'renderer') {
             // body renderer
             result = (root: HTMLElement, _column: GridColumnElement, model: GridItemModel) => {
-              render(
-                this.render<T, R>(renderer as R)(model.item as T, model as GridModel<T>),
-                root,
-                {
-                  eventContext: host
-                }
-              );
+              render(renderer(model.item as T, model as GridModel<T>), root, {
+                eventContext: host
+              });
             };
           } else {
             // header / footer renderer
@@ -125,19 +119,23 @@ class GridRendererDirective extends RendererBase {
     return noop;
   }
 
-  private _initialize<T, R extends GridRenderer<T>>(
+  private _initialize<T>(
     part: PropertyPart,
-    [renderer, value]: [R | Renderer, unknown]
+    [renderer, value]: [GridRenderer<T> | Renderer, unknown]
   ) {
     const element = part.element as GridElement | GridColumnElement;
     if (element.isConnected) {
       return true;
     }
     Promise.resolve().then(() => {
-      this.update<T, R>(part, [renderer, value]);
+      this.update<T>(part, [renderer, value]);
     });
     return false;
   }
 }
 
-export const gridRenderer = directive(GridRendererDirective);
+const rendererDirective = directive(GridRendererDirective);
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const gridRenderer = <T>(renderer: GridRenderer<T>, value?: unknown) =>
+  rendererDirective(renderer as GridRenderer<unknown>, value);

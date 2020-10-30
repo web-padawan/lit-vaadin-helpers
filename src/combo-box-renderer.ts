@@ -27,12 +27,13 @@ class ComboBoxRendererDirective extends RendererBase {
     }
   }
 
-  render<T, R extends ComboBoxRenderer<T>>(renderer: R, _value?: unknown) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  render<T>(renderer: ComboBoxRenderer<T>, _value?: unknown) {
     return renderer;
   }
 
-  update<T, R extends ComboBoxRenderer<T>>(part: PropertyPart, [renderer, value]: [R, unknown]) {
-    if (this._initialize<T, R>(part, [renderer, value])) {
+  update<T>(part: PropertyPart, [renderer, value]: [ComboBoxRenderer<T>, unknown]) {
+    if (this._initialize<T>(part, [renderer, value])) {
       const element = part.element as ComboBoxElement;
       const firstRender = this.isFirstRender();
 
@@ -53,7 +54,7 @@ class ComboBoxRendererDirective extends RendererBase {
           model: ComboBoxItemModel
         ) => {
           render(
-            this.render<T, R>(renderer, value)(model.item as T, model as ComboBoxModel<T>),
+            this.render<T>(renderer, value)(model.item as T, model as ComboBoxModel<T>),
             root,
             {
               eventContext: host
@@ -71,19 +72,20 @@ class ComboBoxRendererDirective extends RendererBase {
     return noop;
   }
 
-  private _initialize<T, R extends ComboBoxRenderer<T>>(
-    part: PropertyPart,
-    [renderer, value]: [R, unknown]
-  ) {
+  private _initialize<T>(part: PropertyPart, [renderer, value]: [ComboBoxRenderer<T>, unknown]) {
     const element = part.element;
     if (element.isConnected) {
       return true;
     }
     Promise.resolve().then(() => {
-      this.update<T, R>(part, [renderer, value]);
+      this.update<T>(part, [renderer, value]);
     });
     return false;
   }
 }
 
-export const comboBoxRenderer = directive(ComboBoxRendererDirective);
+const rendererDirective = directive(ComboBoxRendererDirective);
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const comboBoxRenderer = <T>(renderer: ComboBoxRenderer<T>, value?: unknown) =>
+  rendererDirective(renderer as ComboBoxRenderer<unknown>, value);
