@@ -9,7 +9,7 @@ import '@vaadin/vaadin-grid/vaadin-grid-column-group';
 import '@vaadin/vaadin-checkbox';
 import type { CheckboxElement } from '@vaadin/vaadin-checkbox';
 import type { GridElement, GridEventContext } from '@vaadin/vaadin-grid';
-import { gridRenderer, GridModel } from '../src/grid-renderer';
+import { gridRenderer } from '../src/grid-renderer';
 
 interface User {
   name: {
@@ -45,15 +45,15 @@ class UserInfo extends LitElement {
       <vaadin-grid
         .items="${this.users}"
         .detailsOpenedItems="${this.detailsOpened}"
-        .rowDetailsRenderer="${gridRenderer((model: GridModel<User>) => {
-          return html`${model.item.name.first} ${model.item.name.last}`;
-        })}"
+        .rowDetailsRenderer="${gridRenderer(
+          (item: User) => html`${item.name.first} ${item.name.last}`
+        )}"
       >
         <vaadin-grid-column
           header="First"
           .renderer="${gridRenderer(
-            (model: GridModel<User>) => {
-              const name = model.item.name.first;
+            (item: User) => {
+              const name = item.name.first;
               const match = this.filter && name.indexOf(this.filter) > -1;
               return match ? html`<b>${name}</b>` : html`${name}`;
             },
@@ -63,8 +63,8 @@ class UserInfo extends LitElement {
         <vaadin-grid-column
           header="Last"
           .renderer="${gridRenderer(
-            (model: GridModel<User>) => {
-              const name = model.item.name.last;
+            (item: User) => {
+              const name = item.name.last;
               const match = this.filter && name.indexOf(this.filter) > -1;
               return match ? html`<b>${name}</b>` : html`${name}`;
             },
