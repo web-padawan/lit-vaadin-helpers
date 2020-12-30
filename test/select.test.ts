@@ -2,7 +2,7 @@ import { expect } from '@esm-bundle/chai';
 import sinon from 'sinon';
 import { fixture } from '@open-wc/testing-helpers';
 import { LitElement, html } from 'lit-element';
-import { property } from 'lit-element/lib/decorators/property.js';
+import { property } from 'lit-element/decorators.js';
 import type { SelectElement } from '@vaadin/vaadin-select';
 import type { OverlayElement } from '@vaadin/vaadin-overlay';
 import '@vaadin/vaadin-select';

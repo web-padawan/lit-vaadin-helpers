@@ -1,4 +1,4 @@
-import { Directive } from 'lit-html';
+import { Directive } from 'lit-html/directive.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import type { AsyncInterface } from '@polymer/polymer/interfaces';
 

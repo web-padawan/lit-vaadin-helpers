@@ -1,12 +1,5 @@
-import {
-  directive,
-  noChange,
-  PartInfo,
-  PropertyPart,
-  PROPERTY_PART,
-  render,
-  TemplateResult
-} from 'lit-html';
+import { noChange, PropertyPart, render, TemplateResult } from 'lit-html';
+import { directive, PartInfo, PartType } from 'lit-html/directive.js';
 import type { ComboBoxElement, ComboBoxItemModel } from '@vaadin/vaadin-combo-box';
 import { RendererBase } from './renderer-base';
 
@@ -17,12 +10,10 @@ export interface ComboBoxModel<T> {
 
 export type ComboBoxRenderer<T> = (item: T, model: ComboBoxModel<T>) => TemplateResult;
 
-const noop = () => {}; // eslint-disable-line @typescript-eslint/no-empty-function
-
 class ComboBoxRendererDirective extends RendererBase {
   constructor(part: PartInfo) {
-    super();
-    if (part.type !== PROPERTY_PART || part.name !== 'renderer') {
+    super(part);
+    if (part.type !== PartType.PROPERTY || part.name !== 'renderer') {
       throw new Error('Only supports binding to renderer property');
     }
   }
@@ -33,54 +24,26 @@ class ComboBoxRendererDirective extends RendererBase {
   }
 
   update<T>(part: PropertyPart, [renderer, value]: [ComboBoxRenderer<T>, unknown]) {
-    if (this._initialize<T>(part, [renderer, value])) {
+    const host = part.options?.host;
+    const firstRender = this.isFirstRender();
+
+    if (!this.hasChanged(value)) {
+      return noChange;
+    }
+
+    this.saveValue(value);
+
+    if (firstRender) {
+      return (root: HTMLElement, _comboBox: ComboBoxElement, model: ComboBoxItemModel) => {
+        render(this.render<T>(renderer, value)(model.item as T, model as ComboBoxModel<T>), root, {
+          host
+        });
+      };
+    } else {
       const element = part.element as ComboBoxElement;
-      const firstRender = this.isFirstRender();
-
-      if (!this.hasChanged(value)) {
-        return noChange;
-      }
-
-      this.saveValue(value);
-
-      if (firstRender) {
-        // TODO: refactor to get host from directive metadata.
-        // See https://github.com/Polymer/lit-html/issues/1143
-        const host = (element.getRootNode() as ShadowRoot).host;
-
-        element.renderer = (
-          root: HTMLElement,
-          _comboBox: ComboBoxElement,
-          model: ComboBoxItemModel
-        ) => {
-          render(
-            this.render<T>(renderer, value)(model.item as T, model as ComboBoxModel<T>),
-            root,
-            {
-              eventContext: host
-            }
-          );
-        };
-      } else {
-        element.render();
-        return noChange;
-      }
+      element.render();
+      return noChange;
     }
-
-    // TODO: stub renderer to prevent errors on initial render,
-    // when we do not yet have a reference to the host element.
-    return noop;
-  }
-
-  private _initialize<T>(part: PropertyPart, [renderer, value]: [ComboBoxRenderer<T>, unknown]) {
-    const element = part.element;
-    if (element.isConnected) {
-      return true;
-    }
-    Promise.resolve().then(() => {
-      this.update<T>(part, [renderer, value]);
-    });
-    return false;
   }
 }
 

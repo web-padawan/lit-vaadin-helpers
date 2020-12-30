@@ -2,7 +2,7 @@ import { expect } from '@esm-bundle/chai';
 import sinon from 'sinon';
 import { fixture, nextFrame } from '@open-wc/testing-helpers';
 import { LitElement, html } from 'lit-element';
-import { property } from 'lit-element/lib/decorators/property.js';
+import { property } from 'lit-element/decorators.js';
 import { PolymerElement } from '@polymer/polymer';
 import '@vaadin/vaadin-combo-box/vaadin-combo-box.js';
 import type { ComboBoxElement } from '@vaadin/vaadin-combo-box';
