@@ -25,7 +25,6 @@ class ComboBoxRendererDirective extends RendererBase {
   }
 
   update<T>(part: ElementPart, [renderer, value]: [ComboBoxRenderer<T>, unknown]) {
-    const host = part.options?.host;
     const firstRender = this.isFirstRender();
 
     if (!this.hasChanged(value)) {
@@ -38,6 +37,7 @@ class ComboBoxRendererDirective extends RendererBase {
     if (element instanceof ComboBoxElement) {
       // TODO: support re-assigning renderer function.
       if (firstRender) {
+        const host = part.options?.host;
         element.renderer = (
           root: HTMLElement,
           _comboBox: ComboBoxElement,

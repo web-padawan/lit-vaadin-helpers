@@ -33,8 +33,8 @@ class ContextMenuRendererDirective extends RendererBase {
 
     const element = part.element;
 
-    // TODO: support re-assigning renderer function.
     if (element instanceof ContextMenuElement) {
+      // TODO: support re-assigning renderer function.
       if (firstRender) {
         const host = part.options?.host;
         element.renderer = (

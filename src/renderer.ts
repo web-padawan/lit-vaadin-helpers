@@ -22,8 +22,6 @@ class RendererDirective extends RendererBase {
   }
 
   update(part: ElementPart, [renderer, value]: [Renderer, unknown]) {
-    const host = part.options?.host;
-
     const firstRender = this.isFirstRender();
 
     if (!this.hasChanged(value)) {
@@ -36,6 +34,7 @@ class RendererDirective extends RendererBase {
 
     // TODO: support re-assigning renderer function.
     if (firstRender) {
+      const host = part.options?.host;
       element.renderer = (root: HTMLElement) => {
         render(this.render(renderer, value), root, { host });
       };
