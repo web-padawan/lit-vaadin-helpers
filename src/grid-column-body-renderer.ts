@@ -1,14 +1,13 @@
 import { nothing, ElementPart, render, TemplateResult } from 'lit-html';
 import { directive, DirectiveResult, PartInfo, PartType } from 'lit-html/directive.js';
 import type { GridElement, GridItemModel } from '@vaadin/vaadin-grid';
-import { microTask } from '@polymer/polymer/lib/utils/async.js';
 import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column';
-import { RendererBase } from './renderer-base';
+import { GridRendererBase } from './grid-renderer-base';
 import type { GridModel } from './types';
 
 export type GridColumnRenderer<T> = (item: T, model: GridModel<T>) => TemplateResult;
 
-class GridColumnBodyRendererDirective extends RendererBase {
+class GridColumnBodyRendererDirective extends GridRendererBase {
   constructor(part: PartInfo) {
     super(part);
     if (part.type !== PartType.ELEMENT) {
@@ -48,13 +47,9 @@ class GridColumnBodyRendererDirective extends RendererBase {
         if (grid) {
           // Only call grid.render() once when if the property is changed,
           // in case if that property is used by several column renderers.
-          this.debounce(
-            grid,
-            () => {
-              grid.render();
-            },
-            microTask
-          );
+          this.debounce(grid, () => {
+            grid.render();
+          });
         }
       }
     }

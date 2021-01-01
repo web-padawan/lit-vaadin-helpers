@@ -2,13 +2,12 @@ import { nothing, ElementPart, render, TemplateResult } from 'lit-html';
 import { directive, DirectiveResult, PartInfo, PartType } from 'lit-html/directive.js';
 import type { GridItemModel } from '@vaadin/vaadin-grid';
 import { GridElement } from '@vaadin/vaadin-grid';
-import { microTask } from '@polymer/polymer/lib/utils/async.js';
-import { RendererBase } from './renderer-base';
+import { GridRendererBase } from './grid-renderer-base';
 import type { GridModel } from './types';
 
 export type GridRowDetailsRenderer<T> = (item: T, model: GridModel<T>) => TemplateResult;
 
-class GridRowDetailsRendererDirective extends RendererBase {
+class GridRowDetailsRendererDirective extends GridRendererBase {
   constructor(part: PartInfo) {
     super(part);
     if (part.type !== PartType.ELEMENT) {
@@ -46,13 +45,9 @@ class GridRowDetailsRendererDirective extends RendererBase {
       } else {
         // Only call grid.render() once when if the property is changed,
         // in case if that property is used by several column renderers.
-        this.debounce(
-          element,
-          () => {
-            element.render();
-          },
-          microTask
-        );
+        this.debounce(element, () => {
+          element.render();
+        });
       }
     }
 
