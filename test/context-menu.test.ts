@@ -20,7 +20,7 @@ class ActionSelector extends LitElement {
     return html`
       <vaadin-context-menu
         .openOn="${this.openOn}"
-        .renderer="${contextMenuRenderer(
+        ${contextMenuRenderer(
           (target: HTMLElement) => html`
             <vaadin-list-box>
               ${this.actions.map(
@@ -33,7 +33,7 @@ class ActionSelector extends LitElement {
             </vaadin-list-box>
           `,
           this.actions
-        )}"
+        )}
       >
         <div id="1">First paragraph</div>
         <div id="2">Second paragraph</div>

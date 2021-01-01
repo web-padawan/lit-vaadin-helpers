@@ -33,12 +33,12 @@ class ComboBoxRendererDemo extends LitElement {
       <vaadin-combo-box
         label="${this.label}"
         .items="${this.users}"
-        .renderer="${comboBoxRenderer<User>(
-          (item) => html`<b>${item.name.first}${this.separator}${item.name.last}</b>`,
-          this.separator
-        )}"
         item-value-path="name.last"
         item-label-path="name.last"
+        ${comboBoxRenderer<User>(
+          (item) => html`<b>${item.name.first}${this.separator}${item.name.last}</b>`,
+          this.separator
+        )}
       ></vaadin-combo-box>
     `;
   }

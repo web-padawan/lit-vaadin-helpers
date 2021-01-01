@@ -1,6 +1,7 @@
-import { noChange, PropertyPart, render, TemplateResult } from 'lit-html';
-import { directive, PartInfo, PartType } from 'lit-html/directive.js';
-import type { ComboBoxElement, ComboBoxItemModel } from '@vaadin/vaadin-combo-box';
+import { nothing, ElementPart, render, TemplateResult } from 'lit-html';
+import { directive, DirectiveResult, PartInfo, PartType } from 'lit-html/directive.js';
+import { ComboBoxItemModel } from '@vaadin/vaadin-combo-box';
+import { ComboBoxElement } from '@vaadin/vaadin-combo-box';
 import { RendererBase } from './renderer-base';
 
 export interface ComboBoxModel<T> {
@@ -13,8 +14,8 @@ export type ComboBoxRenderer<T> = (item: T, model: ComboBoxModel<T>) => Template
 class ComboBoxRendererDirective extends RendererBase {
   constructor(part: PartInfo) {
     super(part);
-    if (part.type !== PartType.PROPERTY || part.name !== 'renderer') {
-      throw new Error('Only supports binding to renderer property');
+    if (part.type !== PartType.ELEMENT) {
+      throw new Error('Only supports binding to element');
     }
   }
 
@@ -23,32 +24,44 @@ class ComboBoxRendererDirective extends RendererBase {
     return renderer;
   }
 
-  update<T>(part: PropertyPart, [renderer, value]: [ComboBoxRenderer<T>, unknown]) {
+  update<T>(part: ElementPart, [renderer, value]: [ComboBoxRenderer<T>, unknown]) {
     const host = part.options?.host;
     const firstRender = this.isFirstRender();
 
     if (!this.hasChanged(value)) {
-      return noChange;
+      return nothing;
     }
 
     this.saveValue(value);
 
-    if (firstRender) {
-      return (root: HTMLElement, _comboBox: ComboBoxElement, model: ComboBoxItemModel) => {
-        render(this.render<T>(renderer, value)(model.item as T, model as ComboBoxModel<T>), root, {
-          host
-        });
-      };
-    } else {
-      const element = part.element as ComboBoxElement;
-      element.render();
-      return noChange;
+    const element = part.element;
+    if (element instanceof ComboBoxElement) {
+      // TODO: support re-assigning renderer function.
+      if (firstRender) {
+        element.renderer = (
+          root: HTMLElement,
+          _comboBox: ComboBoxElement,
+          model: ComboBoxItemModel
+        ) => {
+          render(
+            this.render<T>(renderer, value)(model.item as T, model as ComboBoxModel<T>),
+            root,
+            { host }
+          );
+        };
+      } else {
+        element.render();
+      }
     }
+
+    return nothing;
   }
 }
 
 const rendererDirective = directive(ComboBoxRendererDirective);
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const comboBoxRenderer = <T>(renderer: ComboBoxRenderer<T>, value?: unknown) =>
+export const comboBoxRenderer = <T>(
+  renderer: ComboBoxRenderer<T>,
+  value?: unknown
+): DirectiveResult<typeof ComboBoxRendererDirective> =>
   rendererDirective(renderer as ComboBoxRenderer<unknown>, value);

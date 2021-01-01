@@ -1,4 +1,4 @@
-import { noChange, PropertyPart, render } from 'lit-html';
+import { nothing, ElementPart, render } from 'lit-html';
 import { directive, PartInfo, PartType } from 'lit-html/directive.js';
 import { RendererBase } from './renderer-base';
 import type { Renderer } from './types';
@@ -11,8 +11,8 @@ interface HasRenderer {
 class RendererDirective extends RendererBase {
   constructor(part: PartInfo) {
     super(part);
-    if (part.type !== PartType.PROPERTY || part.name !== 'renderer') {
-      throw new Error('Only supports binding to renderer property');
+    if (part.type !== PartType.ELEMENT) {
+      throw new Error('Only supports binding to element');
     }
   }
 
@@ -21,26 +21,29 @@ class RendererDirective extends RendererBase {
     return renderer();
   }
 
-  update(part: PropertyPart, [renderer, value]: [Renderer, unknown]) {
+  update(part: ElementPart, [renderer, value]: [Renderer, unknown]) {
     const host = part.options?.host;
 
     const firstRender = this.isFirstRender();
 
     if (!this.hasChanged(value)) {
-      return noChange;
+      return nothing;
     }
 
     this.saveValue(value);
 
+    const element = part.element as HTMLElement & HasRenderer;
+
+    // TODO: support re-assigning renderer function.
     if (firstRender) {
-      return (root: HTMLElement) => {
+      element.renderer = (root: HTMLElement) => {
         render(this.render(renderer, value), root, { host });
       };
     } else {
-      const element = part.element as HTMLElement & HasRenderer;
       element.render();
-      return noChange;
     }
+
+    return nothing;
   }
 }
 

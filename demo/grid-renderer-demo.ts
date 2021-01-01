@@ -7,7 +7,10 @@ import '@vaadin/vaadin-text-field';
 import type { CheckboxElement } from '@vaadin/vaadin-checkbox';
 import type { TextFieldElement } from '@vaadin/vaadin-text-field';
 import type { GridElement, GridEventContext } from '@vaadin/vaadin-grid';
-import { gridRenderer } from '../src/grid-renderer';
+import { rowDetailsRenderer } from '../src/grid-row-details-renderer';
+import { bodyRenderer } from '../src/grid-column-body-renderer';
+import { headerRenderer } from '../src/grid-column-header-renderer';
+import { footerRenderer } from '../src/grid-column-footer-renderer';
 
 interface User {
   name: {
@@ -43,39 +46,40 @@ class GridRendererDemo extends LitElement {
       <vaadin-grid
         .items="${this.users}"
         .detailsOpenedItems="${this.detailsOpened}"
-        .rowDetailsRenderer="${gridRenderer<User>(
+        ${rowDetailsRenderer<User>(
           (item) => html`User name: ${item.username}. Phone: ${item.phone}`
-        )}"
+        )}
       >
         <vaadin-grid-column
           header="#"
           flex-grow="0"
           width="60px"
           text-align="end"
-          .renderer="${gridRenderer<User>((_item, model) => html`${model.index}`)}"
+          ${bodyRenderer<User>((_item, model) => html`${model.index}`)}
         ></vaadin-grid-column>
         <vaadin-grid-column-group header="Name">
           <vaadin-grid-column
-            header="First"
-            .renderer="${gridRenderer<User>(
+            ${headerRenderer(() => html`<b>First</b>`)}
+            ${footerRenderer(() => html`<b>First</b>`)}
+            ${bodyRenderer<User>(
               (item) => {
                 const name = item.name.first;
                 const match = this.filter && name.indexOf(this.filter) > -1;
                 return match ? html`<b>${name}</b>` : html`${name}`;
               },
               [this.filter]
-            )}"
+            )}
           ></vaadin-grid-column>
           <vaadin-grid-column
             header="Last"
-            .renderer="${gridRenderer<User>(
+            ${bodyRenderer<User>(
               (item) => {
                 const name = item.name.last;
                 const match = this.filter && name.indexOf(this.filter) > -1;
                 return match ? html`<b>${name}</b>` : html`${name}`;
               },
               [this.filter]
-            )}"
+            )}
           ></vaadin-grid-column>
         </vaadin-grid-column-group>
         <vaadin-grid-column-group header="Location">
@@ -87,9 +91,9 @@ class GridRendererDemo extends LitElement {
           header="Details"
           flex-grow="0"
           width="90px"
-          .renderer="${gridRenderer(
+          ${bodyRenderer(
             () => html`<vaadin-checkbox @change="${this.toggleDetails}"></vaadin-checkbox>`
-          )}"
+          )}
         ></vaadin-grid-column>
       </vaadin-grid>
     `;

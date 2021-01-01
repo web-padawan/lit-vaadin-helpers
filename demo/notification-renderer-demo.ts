@@ -14,10 +14,10 @@ class NotificationRendererDemo extends LitElement {
       <vaadin-button @click=${this.toggle}>Toggle notification</vaadin-button>
       <vaadin-notification
         .opened=${this.opened}
-        .renderer="${renderer(() => html`Opened&nbsp;<b>${this.count}</b>&nbsp;times`, this.count)}"
         position="top-start"
         duration="-1"
         @opened-changed="${this.onOpenedChanged}"
+        ${renderer(() => html`Opened&nbsp;<b>${this.count}</b>&nbsp;times`, this.count)}
       ></vaadin-notification>
     `;
   }

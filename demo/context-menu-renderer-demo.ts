@@ -14,7 +14,7 @@ class ContextMenuRendererDemo extends LitElement {
   render() {
     return html`
       <vaadin-context-menu
-        .renderer="${contextMenuRenderer(
+        ${contextMenuRenderer(
           (target: HTMLElement) => html`
             <vaadin-list-box>
               ${this.actions.map(
@@ -27,7 +27,7 @@ class ContextMenuRendererDemo extends LitElement {
             </vaadin-list-box>
           `,
           this.actions
-        )}"
+        )}
       >
         <div id="1">First paragraph with the context-menu.</div>
         <div id="2">Second paragraph which uses the same context menu.</div>

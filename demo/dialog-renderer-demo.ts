@@ -17,7 +17,9 @@ class DialogRendererDemo extends LitElement {
       <vaadin-button @click="${this.toggle}">Toggle dialog</vaadin-button>
       <vaadin-dialog
         .opened=${this.opened}
-        .renderer=${renderer(
+        @opened-changed="${this.onOpenedChanged}"
+        modeless
+        ${renderer(
           () => html`
             <vaadin-date-picker
               label="Select date"
@@ -25,8 +27,6 @@ class DialogRendererDemo extends LitElement {
             ></vaadin-date-picker>
           `
         )}
-        @opened-changed="${this.onOpenedChanged}"
-        modeless
       ></vaadin-dialog>
     `;
   }
