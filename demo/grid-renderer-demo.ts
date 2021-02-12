@@ -1,5 +1,5 @@
-import { LitElement, html, TemplateResult } from 'lit-element';
-import { property, query } from 'lit-element/decorators.js';
+import { LitElement, html, TemplateResult } from 'lit';
+import { property, query } from 'lit/decorators.js';
 import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-grid/vaadin-grid-column-group';
 import '@vaadin/vaadin-checkbox';

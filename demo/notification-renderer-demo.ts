@@ -1,5 +1,5 @@
-import { LitElement, html } from 'lit-element';
-import { property } from 'lit-element/decorators.js';
+import { LitElement, html } from 'lit';
+import { property } from 'lit/decorators.js';
 import '@vaadin/vaadin-button/vaadin-button.js';
 import '@vaadin/vaadin-notification/vaadin-notification.js';
 import { renderer } from '../src/renderer';

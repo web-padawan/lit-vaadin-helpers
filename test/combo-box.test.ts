@@ -1,8 +1,8 @@
 import { expect } from '@esm-bundle/chai';
 import sinon from 'sinon';
 import { fixture, nextFrame } from '@open-wc/testing-helpers';
-import { LitElement, html } from 'lit-element';
-import { property } from 'lit-element/decorators.js';
+import { LitElement, html } from 'lit';
+import { property } from 'lit/decorators.js';
 import { PolymerElement } from '@polymer/polymer';
 import '@vaadin/vaadin-combo-box/vaadin-combo-box.js';
 import type { ComboBoxElement } from '@vaadin/vaadin-combo-box';
@@ -74,7 +74,8 @@ describe('vaadin-combo-box renderer', () => {
     comboBox = wrapper.renderRoot.querySelector('vaadin-combo-box') as ComboBoxElement;
     comboBox.opened = true;
     await nextFrame();
-    const dropdown = (comboBox.$.overlay as PolymerElement).$.dropdown as PolymerElement;
+    const dropdown = (((comboBox as unknown) as PolymerElement).$.overlay as PolymerElement).$
+      .dropdown as PolymerElement;
     const overlay = dropdown.$.overlay as OverlayElement;
     content = overlay.content as HTMLElement;
     item = content.querySelector('vaadin-combo-box-item') as PolymerElement;

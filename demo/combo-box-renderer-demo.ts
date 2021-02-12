@@ -1,5 +1,5 @@
-import { LitElement, html } from 'lit-element';
-import { property } from 'lit-element/decorators.js';
+import { LitElement, html } from 'lit';
+import { property } from 'lit/decorators.js';
 import '@vaadin/vaadin-combo-box/vaadin-combo-box.js';
 import { comboBoxRenderer } from '../src/combo-box-renderer';
 
