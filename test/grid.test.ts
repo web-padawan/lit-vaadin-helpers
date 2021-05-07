@@ -39,7 +39,7 @@ class UserInfo extends LitElement {
 
   @property({ type: String }) label = 'Filter';
 
-  @query('vaadin-grid') grid!: GridElement;
+  @query('vaadin-grid') grid!: GridElement<User>;
 
   render(): TemplateResult {
     return html`
@@ -84,14 +84,18 @@ class UserInfo extends LitElement {
 
   toggleDetails(event: CustomEvent) {
     const target = event.target as CheckboxElement;
-    const context = this.grid.getEventContext(event) as GridEventContext;
-    const user = context.item as User;
-    if (target.checked) {
-      // show user details
-      this.detailsOpened = [...this.detailsOpened, user];
-    } else if (this.detailsOpened.length) {
-      // hide user details
-      this.detailsOpened = this.detailsOpened.filter((item) => item.name.first !== user.name.first);
+    const context = this.grid.getEventContext(event) as GridEventContext<User>;
+    const user = context.item;
+    if (user) {
+      if (target.checked) {
+        // show user details
+        this.detailsOpened = [...this.detailsOpened, user];
+      } else if (this.detailsOpened.length) {
+        // hide user details
+        this.detailsOpened = this.detailsOpened.filter(
+          (item) => item.name.first !== user.name.first
+        );
+      }
     }
   }
 }

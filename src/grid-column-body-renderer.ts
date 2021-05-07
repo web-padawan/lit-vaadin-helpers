@@ -37,9 +37,9 @@ class GridColumnBodyRendererDirective extends GridRendererBase {
         element.renderer = (
           root: HTMLElement,
           _column?: GridColumnElement,
-          model?: GridItemModel
+          model?: GridItemModel<T>
         ) => {
-          const item = (model as GridItemModel).item;
+          const item = (model as GridItemModel<T>).item;
           render(renderer(item as T, model as GridModel<T>), root, { host });
         };
       } else {

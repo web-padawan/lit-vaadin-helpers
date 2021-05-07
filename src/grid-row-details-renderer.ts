@@ -37,9 +37,9 @@ class GridRowDetailsRendererDirective extends GridRendererBase {
         element.rowDetailsRenderer = (
           root: HTMLElement,
           _grid?: GridElement,
-          model?: GridItemModel
+          model?: GridItemModel<T>
         ) => {
-          const item = (model as GridItemModel).item;
+          const item = (model as GridItemModel<T>).item;
           render(renderer(item as T, model as GridModel<T>), root, { host });
         };
       } else {
