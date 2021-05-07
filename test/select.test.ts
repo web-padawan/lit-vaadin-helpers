@@ -8,7 +8,7 @@ import type { OverlayElement } from '@vaadin/vaadin-overlay';
 import '@vaadin/vaadin-select';
 import '@vaadin/vaadin-list-box';
 import '@vaadin/vaadin-item';
-import { renderer } from '../src/renderer.js';
+import { renderer } from '../src/index.js';
 
 class StatusSelector extends LitElement {
   @property({ attribute: false }) statuses = [

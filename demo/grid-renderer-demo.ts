@@ -7,10 +7,12 @@ import '@vaadin/vaadin-text-field';
 import type { CheckboxElement } from '@vaadin/vaadin-checkbox';
 import type { TextFieldElement } from '@vaadin/vaadin-text-field';
 import type { GridElement, GridEventContext } from '@vaadin/vaadin-grid';
-import { gridRowDetailsRenderer } from '../src/grid-row-details-renderer.js';
-import { columnBodyRenderer } from '../src/grid-column-body-renderer.js';
-import { columnHeaderRenderer } from '../src/grid-column-header-renderer.js';
-import { columnFooterRenderer } from '../src/grid-column-footer-renderer.js';
+import {
+  columnBodyRenderer,
+  columnHeaderRenderer,
+  columnFooterRenderer,
+  gridRowDetailsRenderer
+} from '../src/index.js';
 
 interface User {
   name: {

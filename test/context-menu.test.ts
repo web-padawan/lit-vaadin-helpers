@@ -10,7 +10,7 @@ import '@vaadin/vaadin-item/vaadin-item.js';
 import type { ContextMenuElement } from '@vaadin/vaadin-context-menu';
 import type { OverlayElement } from '@vaadin/vaadin-overlay';
 import type { ItemElement } from '@vaadin/vaadin-item/vaadin-item.js';
-import { contextMenuRenderer } from '../src/context-menu-renderer.js';
+import { contextMenuRenderer } from '../src/index.js';
 
 class ActionSelector extends LitElement {
   @property({ type: Array }) actions = ['Edit', 'Delete'];
