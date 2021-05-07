@@ -1,6 +1,6 @@
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { microTask } from '@polymer/polymer/lib/utils/async.js';
-import { RendererBase } from './renderer-base';
+import { RendererBase } from './renderer-base.js';
 
 interface HasLitDebouncer {
   _debounceLitRender: Debouncer;

@@ -8,9 +8,9 @@ import '@vaadin/vaadin-grid/vaadin-grid-column-group';
 import '@vaadin/vaadin-checkbox';
 import type { CheckboxElement } from '@vaadin/vaadin-checkbox';
 import type { GridElement, GridEventContext } from '@vaadin/vaadin-grid';
-import { gridRowDetailsRenderer } from '../src/grid-row-details-renderer';
-import { columnBodyRenderer } from '../src/grid-column-body-renderer';
-import { columnHeaderRenderer } from '../src/grid-column-header-renderer';
+import { gridRowDetailsRenderer } from '../src/grid-row-details-renderer.js';
+import { columnBodyRenderer } from '../src/grid-column-body-renderer.js';
+import { columnHeaderRenderer } from '../src/grid-column-header-renderer.js';
 
 interface User {
   name: {

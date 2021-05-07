@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
 import '@vaadin/vaadin-button/vaadin-button.js';
 import '@vaadin/vaadin-notification/vaadin-notification.js';
-import { renderer } from '../src/renderer';
+import { renderer } from '../src/renderer.js';
 
 class NotificationRendererDemo extends LitElement {
   @property({ type: Boolean }) opened = false;

@@ -1,4 +1,4 @@
-import { Directive } from 'lit-html/directive.js';
+import { Directive } from 'lit/directive.js';
 
 // A sentinel that indicates renderer hasn't been initialized
 const initialValue = {};

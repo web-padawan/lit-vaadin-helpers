@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
 import '@vaadin/vaadin-combo-box/vaadin-combo-box.js';
-import { comboBoxRenderer } from '../src/combo-box-renderer';
+import { comboBoxRenderer } from '../src/combo-box-renderer.js';
 
 interface User {
   name: {

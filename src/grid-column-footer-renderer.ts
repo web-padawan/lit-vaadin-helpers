@@ -2,7 +2,7 @@ import { nothing, ElementPart, render, TemplateResult } from 'lit';
 import { directive, PartInfo, PartType } from 'lit/directive.js';
 import type { GridElement } from '@vaadin/vaadin-grid';
 import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column';
-import { GridRendererBase } from './grid-renderer-base';
+import { GridRendererBase } from './grid-renderer-base.js';
 
 export type GridColumnFooterLitRenderer = (column: GridColumnElement) => TemplateResult;
 

@@ -1,7 +1,7 @@
 import { nothing, ElementPart, render } from 'lit';
 import { directive, PartInfo, PartType } from 'lit/directive.js';
-import { RendererBase } from './renderer-base';
-import type { Renderer } from './types';
+import { RendererBase } from './renderer-base.js';
+import type { Renderer } from './types.js';
 
 interface HasRenderer {
   renderer: (root: HTMLElement) => void;

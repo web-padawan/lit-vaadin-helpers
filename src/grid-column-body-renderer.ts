@@ -1,9 +1,9 @@
 import { nothing, ElementPart, render, TemplateResult } from 'lit';
 import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
 import type { GridElement, GridItemModel } from '@vaadin/vaadin-grid';
-import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column';
-import { GridRendererBase } from './grid-renderer-base';
-import type { GridModel } from './types';
+import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column.js';
+import { GridRendererBase } from './grid-renderer-base.js';
+import type { GridModel } from './types.js';
 
 export type GridColumnBodyLitRenderer<T> = (item: T, model: GridModel<T>) => TemplateResult;
 

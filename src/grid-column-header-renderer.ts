@@ -1,8 +1,8 @@
 import { nothing, ElementPart, render, TemplateResult } from 'lit';
 import { directive, PartInfo, PartType } from 'lit/directive.js';
 import type { GridElement } from '@vaadin/vaadin-grid';
-import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column';
-import { GridRendererBase } from './grid-renderer-base';
+import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column.js';
+import { GridRendererBase } from './grid-renderer-base.js';
 
 export type GridColumnHeaderLitRenderer = (column: GridColumnElement) => TemplateResult;
 
