@@ -8,9 +8,9 @@ import '@vaadin/vaadin-grid/vaadin-grid-column-group';
 import '@vaadin/vaadin-checkbox';
 import type { CheckboxElement } from '@vaadin/vaadin-checkbox';
 import type { GridElement, GridEventContext } from '@vaadin/vaadin-grid';
-import { rowDetailsRenderer } from '../src/grid-row-details-renderer';
-import { bodyRenderer } from '../src/grid-column-body-renderer';
-import { headerRenderer } from '../src/grid-column-header-renderer';
+import { gridRowDetailsRenderer } from '../src/grid-row-details-renderer';
+import { columnBodyRenderer } from '../src/grid-column-body-renderer';
+import { columnHeaderRenderer } from '../src/grid-column-header-renderer';
 
 interface User {
   name: {
@@ -46,11 +46,11 @@ class UserInfo extends LitElement {
       <vaadin-grid
         .items="${this.users}"
         .detailsOpenedItems="${this.detailsOpened}"
-        ${rowDetailsRenderer<User>((item) => html`${item.name.first} ${item.name.last}`)}
+        ${gridRowDetailsRenderer<User>((item) => html`${item.name.first} ${item.name.last}`)}
       >
         <vaadin-grid-column
-          ${headerRenderer(() => html`<b>First</b>`)}
-          ${bodyRenderer<User>(
+          ${columnHeaderRenderer(() => html`<b>First</b>`)}
+          ${columnBodyRenderer<User>(
             (item) => {
               const name = item.name.first;
               const match = this.filter && name.indexOf(this.filter) > -1;
@@ -61,7 +61,7 @@ class UserInfo extends LitElement {
         ></vaadin-grid-column>
         <vaadin-grid-column
           header="Last"
-          ${bodyRenderer<User>(
+          ${columnBodyRenderer<User>(
             (item) => {
               const name = item.name.last;
               const match = this.filter && name.indexOf(this.filter) > -1;
@@ -74,7 +74,7 @@ class UserInfo extends LitElement {
           header="Details"
           flex-grow="0"
           width="90px"
-          ${bodyRenderer(
+          ${columnBodyRenderer(
             () => html`<vaadin-checkbox @change="${this.toggleDetails}"></vaadin-checkbox>`
           )}
         ></vaadin-grid-column>

@@ -4,7 +4,7 @@ import type { GridElement } from '@vaadin/vaadin-grid';
 import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column';
 import { GridRendererBase } from './grid-renderer-base';
 
-export type GridColumnHeaderRenderer = (column: GridColumnElement) => TemplateResult;
+export type GridColumnHeaderLitRenderer = (column: GridColumnElement) => TemplateResult;
 
 class GridColumnHeaderRendererDirective extends GridRendererBase {
   constructor(part: PartInfo) {
@@ -15,11 +15,11 @@ class GridColumnHeaderRendererDirective extends GridRendererBase {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  render(renderer: GridColumnHeaderRenderer, _value?: unknown) {
+  render(renderer: GridColumnHeaderLitRenderer, _value?: unknown) {
     return renderer;
   }
 
-  update(part: ElementPart, [renderer, value]: [GridColumnHeaderRenderer, unknown]) {
+  update(part: ElementPart, [renderer, value]: [GridColumnHeaderLitRenderer, unknown]) {
     const firstRender = this.isFirstRender();
 
     if (!this.hasChanged(value)) {
@@ -52,4 +52,4 @@ class GridColumnHeaderRendererDirective extends GridRendererBase {
   }
 }
 
-export const headerRenderer = directive(GridColumnHeaderRendererDirective);
+export const columnHeaderRenderer = directive(GridColumnHeaderRendererDirective);

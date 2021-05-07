@@ -5,7 +5,7 @@ import { GridElement } from '@vaadin/vaadin-grid';
 import { GridRendererBase } from './grid-renderer-base';
 import type { GridModel } from './types';
 
-export type GridRowDetailsRenderer<T> = (item: T, model: GridModel<T>) => TemplateResult;
+export type GridRowDetailsLitRenderer<T> = (item: T, model: GridModel<T>) => TemplateResult;
 
 class GridRowDetailsRendererDirective extends GridRendererBase {
   constructor(part: PartInfo) {
@@ -16,11 +16,11 @@ class GridRowDetailsRendererDirective extends GridRendererBase {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  render<T>(renderer: GridRowDetailsRenderer<T>, _value?: unknown) {
+  render<T>(renderer: GridRowDetailsLitRenderer<T>, _value?: unknown) {
     return renderer;
   }
 
-  update<T>(part: ElementPart, [renderer, value]: [GridRowDetailsRenderer<T>, unknown]) {
+  update<T>(part: ElementPart, [renderer, value]: [GridRowDetailsLitRenderer<T>, unknown]) {
     const firstRender = this.isFirstRender();
 
     if (!this.hasChanged(value)) {
@@ -57,8 +57,8 @@ class GridRowDetailsRendererDirective extends GridRendererBase {
 
 const rendererDirective = directive(GridRowDetailsRendererDirective);
 
-export const rowDetailsRenderer = <T>(
-  renderer: GridRowDetailsRenderer<T>,
+export const gridRowDetailsRenderer = <T>(
+  renderer: GridRowDetailsLitRenderer<T>,
   value?: unknown
 ): DirectiveResult<typeof GridRowDetailsRendererDirective> =>
-  rendererDirective(renderer as GridRowDetailsRenderer<unknown>, value);
+  rendererDirective(renderer as GridRowDetailsLitRenderer<unknown>, value);

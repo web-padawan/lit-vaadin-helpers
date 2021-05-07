@@ -4,7 +4,7 @@ import type { ContextMenuRendererContext } from '@vaadin/vaadin-context-menu';
 import { ContextMenuElement } from '@vaadin/vaadin-context-menu';
 import { RendererBase } from './renderer-base';
 
-export type ContextMenuRenderer<T> = (target: HTMLElement, detail: T) => TemplateResult;
+export type ContextMenuLitRenderer<T> = (target: HTMLElement, detail: T) => TemplateResult;
 
 class ContextMenuRendererDirective extends RendererBase {
   constructor(part: PartInfo) {
@@ -15,13 +15,13 @@ class ContextMenuRendererDirective extends RendererBase {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  render<T extends unknown>(renderer: ContextMenuRenderer<T>, _value?: unknown) {
+  render<T extends unknown>(renderer: ContextMenuLitRenderer<T>, _value?: unknown) {
     return renderer;
   }
 
   update<T extends unknown>(
     part: ElementPart,
-    [renderer, value]: [ContextMenuRenderer<T>, unknown]
+    [renderer, value]: [ContextMenuLitRenderer<T>, unknown]
   ) {
     const firstRender = this.isFirstRender();
 
@@ -57,7 +57,7 @@ class ContextMenuRendererDirective extends RendererBase {
 const rendererDirective = directive(ContextMenuRendererDirective);
 
 export const contextMenuRenderer = <T>(
-  renderer: ContextMenuRenderer<T>,
+  renderer: ContextMenuLitRenderer<T>,
   value?: unknown
 ): DirectiveResult<typeof ContextMenuRendererDirective> =>
-  rendererDirective(renderer as ContextMenuRenderer<unknown>, value);
+  rendererDirective(renderer as ContextMenuLitRenderer<unknown>, value);

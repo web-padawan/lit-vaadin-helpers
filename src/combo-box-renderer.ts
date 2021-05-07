@@ -9,7 +9,7 @@ export interface ComboBoxModel<T> {
   item: T;
 }
 
-export type ComboBoxRenderer<T> = (item: T, model: ComboBoxModel<T>) => TemplateResult;
+export type ComboBoxLitRenderer<T> = (item: T, model: ComboBoxModel<T>) => TemplateResult;
 
 class ComboBoxRendererDirective extends RendererBase {
   constructor(part: PartInfo) {
@@ -20,11 +20,11 @@ class ComboBoxRendererDirective extends RendererBase {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  render<T>(renderer: ComboBoxRenderer<T>, _value?: unknown) {
+  render<T>(renderer: ComboBoxLitRenderer<T>, _value?: unknown) {
     return renderer;
   }
 
-  update<T>(part: ElementPart, [renderer, value]: [ComboBoxRenderer<T>, unknown]) {
+  update<T>(part: ElementPart, [renderer, value]: [ComboBoxLitRenderer<T>, unknown]) {
     const firstRender = this.isFirstRender();
 
     if (!this.hasChanged(value)) {
@@ -61,7 +61,7 @@ class ComboBoxRendererDirective extends RendererBase {
 const rendererDirective = directive(ComboBoxRendererDirective);
 
 export const comboBoxRenderer = <T>(
-  renderer: ComboBoxRenderer<T>,
+  renderer: ComboBoxLitRenderer<T>,
   value?: unknown
 ): DirectiveResult<typeof ComboBoxRendererDirective> =>
-  rendererDirective(renderer as ComboBoxRenderer<unknown>, value);
+  rendererDirective(renderer as ComboBoxLitRenderer<unknown>, value);
