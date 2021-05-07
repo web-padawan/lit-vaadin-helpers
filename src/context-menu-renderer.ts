@@ -1,5 +1,5 @@
-import { nothing, ElementPart, render, TemplateResult } from 'lit-html';
-import { directive, DirectiveResult, PartInfo, PartType } from 'lit-html/directive.js';
+import { nothing, ElementPart, render, TemplateResult } from 'lit';
+import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
 import type { ContextMenuRendererContext } from '@vaadin/vaadin-context-menu';
 import { ContextMenuElement } from '@vaadin/vaadin-context-menu';
 import { RendererBase } from './renderer-base';

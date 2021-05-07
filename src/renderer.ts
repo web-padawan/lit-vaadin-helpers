@@ -1,5 +1,5 @@
-import { nothing, ElementPart, render } from 'lit-html';
-import { directive, PartInfo, PartType } from 'lit-html/directive.js';
+import { nothing, ElementPart, render } from 'lit';
+import { directive, PartInfo, PartType } from 'lit/directive.js';
 import { RendererBase } from './renderer-base';
 import type { Renderer } from './types';
 

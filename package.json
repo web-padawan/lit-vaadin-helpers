@@ -13,9 +13,7 @@
     "watch": "tsc-watch"
   },
   "dependencies": {
-    "lit-element": "^3.0.0-pre.3",
-    "lit-html": "^2.0.0-pre.6",
-    "lit": "2.0.0-pre.1"
+    "lit": "^2.0.0-rc.1"
   },
   "devDependencies": {
     "@esm-bundle/chai": "^4.3.0",

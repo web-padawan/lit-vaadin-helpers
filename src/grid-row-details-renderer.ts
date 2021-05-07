@@ -1,5 +1,5 @@
-import { nothing, ElementPart, render, TemplateResult } from 'lit-html';
-import { directive, DirectiveResult, PartInfo, PartType } from 'lit-html/directive.js';
+import { nothing, ElementPart, render, TemplateResult } from 'lit';
+import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
 import type { GridItemModel } from '@vaadin/vaadin-grid';
 import { GridElement } from '@vaadin/vaadin-grid';
 import { GridRendererBase } from './grid-renderer-base';
