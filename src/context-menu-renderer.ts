@@ -1,9 +1,9 @@
-import { nothing, ElementPart, render, TemplateResult } from 'lit';
-import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
+import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
+import { directive, PartInfo, PartType } from 'lit/directive.js';
 import { ContextMenuElement, ContextMenuRendererContext } from '@vaadin/vaadin-context-menu';
-import { RendererBase } from './renderer-base.js';
+import { ElementWithRenderer, Renderer, RendererBase } from './renderer-base.js';
 
-export type ContextMenuLitRenderer<T> = (target: HTMLElement, detail: T) => TemplateResult;
+export type ContextMenuLitRenderer = (context: ContextMenuRendererContext) => TemplateResult;
 
 class ContextMenuRendererDirective extends RendererBase {
   constructor(part: PartInfo) {
@@ -14,49 +14,42 @@ class ContextMenuRendererDirective extends RendererBase {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  render<T extends unknown>(renderer: ContextMenuLitRenderer<T>, _value?: unknown) {
+  render(renderer: ContextMenuLitRenderer, _value?: unknown) {
     return renderer;
   }
 
-  update<T extends unknown>(
-    part: ElementPart,
-    [renderer, value]: [ContextMenuLitRenderer<T>, unknown]
-  ) {
-    const firstRender = this.isFirstRender();
-
-    if (!this.hasChanged(value)) {
-      return nothing;
-    }
-
-    this.saveValue(value);
-
-    const element = part.element;
-
-    if (element instanceof ContextMenuElement) {
-      // TODO: support re-assigning renderer function.
-      if (firstRender) {
-        const host = part.options?.host;
-        element.renderer = (
-          root: HTMLElement,
-          _menu?: ContextMenuElement,
-          context?: ContextMenuRendererContext
-        ) => {
-          const { detail, target } = context as ContextMenuRendererContext;
-          render(renderer(target, detail as T), root, { host });
-        };
-      } else {
-        element.render();
-      }
-    }
+  update(part: ElementPart, [renderer, value]: [ContextMenuLitRenderer, unknown]) {
+    super.update(part, [renderer, value]);
 
     return nothing;
   }
+
+  /**
+   * Set renderer callback to the element.
+   */
+  addRenderer(
+    element: ElementWithRenderer,
+    renderer: Renderer,
+    value: unknown,
+    options: RenderOptions
+  ) {
+    element.renderer = (
+      root: HTMLElement,
+      _menu?: ContextMenuElement,
+      context?: ContextMenuRendererContext
+    ) => {
+      if (context) {
+        render(this.render(renderer, value)(context), root, options);
+      }
+    };
+  }
+
+  /**
+   * Run renderer callback on the element.
+   */
+  runRenderer(element: ElementWithRenderer) {
+    element.render();
+  }
 }
 
-const rendererDirective = directive(ContextMenuRendererDirective);
-
-export const contextMenuRenderer = <T>(
-  renderer: ContextMenuLitRenderer<T>,
-  value?: unknown
-): DirectiveResult<typeof ContextMenuRendererDirective> =>
-  rendererDirective(renderer as ContextMenuLitRenderer<unknown>, value);
+export const contextMenuRenderer = directive(ContextMenuRendererDirective);

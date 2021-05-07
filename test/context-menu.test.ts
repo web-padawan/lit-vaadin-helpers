@@ -22,7 +22,7 @@ class ActionSelector extends LitElement {
       <vaadin-context-menu
         .openOn="${this.openOn}"
         ${contextMenuRenderer(
-          (target: HTMLElement) => html`
+          ({ target }) => html`
             <vaadin-list-box>
               ${this.actions.map(
                 (name) => html`

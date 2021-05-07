@@ -1,12 +1,6 @@
-import { nothing, ElementPart, render } from 'lit';
+import { nothing, ElementPart, render, RenderOptions } from 'lit';
 import { directive, PartInfo, PartType } from 'lit/directive.js';
-import { RendererBase } from './renderer-base.js';
-import type { Renderer } from './types.js';
-
-interface HasRenderer {
-  renderer: (root: HTMLElement) => void;
-  render(): void;
-}
+import { ElementWithRenderer, Renderer, RendererBase } from './renderer-base.js';
 
 class RendererDirective extends RendererBase {
   constructor(part: PartInfo) {
@@ -22,27 +16,30 @@ class RendererDirective extends RendererBase {
   }
 
   update(part: ElementPart, [renderer, value]: [Renderer, unknown]) {
-    const firstRender = this.isFirstRender();
-
-    if (!this.hasChanged(value)) {
-      return nothing;
-    }
-
-    this.saveValue(value);
-
-    const element = part.element as HTMLElement & HasRenderer;
-
-    // TODO: support re-assigning renderer function.
-    if (firstRender) {
-      const host = part.options?.host;
-      element.renderer = (root: HTMLElement) => {
-        render(this.render(renderer, value), root, { host });
-      };
-    } else {
-      element.render();
-    }
+    super.update(part, [renderer, value]);
 
     return nothing;
+  }
+
+  /**
+   * Set renderer callback to the element.
+   */
+  addRenderer(
+    element: ElementWithRenderer,
+    renderer: Renderer,
+    value: unknown,
+    options: RenderOptions
+  ) {
+    element.renderer = (root: HTMLElement) => {
+      render(this.render(renderer, value), root, options);
+    };
+  }
+
+  /**
+   * Run renderer callback on the element.
+   */
+  runRenderer(element: ElementWithRenderer) {
+    element.render();
   }
 }
 

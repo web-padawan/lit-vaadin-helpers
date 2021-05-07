@@ -15,7 +15,7 @@ class ContextMenuRendererDemo extends LitElement {
     return html`
       <vaadin-context-menu
         ${contextMenuRenderer(
-          (target: HTMLElement) => html`
+          ({ target }) => html`
             <vaadin-list-box>
               ${this.actions.map(
                 (name) => html`

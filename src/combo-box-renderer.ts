@@ -1,7 +1,7 @@
-import { nothing, ElementPart, render, TemplateResult } from 'lit';
+import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
 import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
 import { ComboBoxElement, ComboBoxItemModel } from '@vaadin/vaadin-combo-box';
-import { RendererBase } from './renderer-base.js';
+import { ElementWithRenderer, Renderer, RendererBase } from './renderer-base.js';
 
 export interface ComboBoxModel<T> {
   index: number;
@@ -24,36 +24,38 @@ class ComboBoxRendererDirective extends RendererBase {
   }
 
   update<T>(part: ElementPart, [renderer, value]: [ComboBoxLitRenderer<T>, unknown]) {
-    const firstRender = this.isFirstRender();
-
-    if (!this.hasChanged(value)) {
-      return nothing;
-    }
-
-    this.saveValue(value);
-
-    const element = part.element;
-    if (element instanceof ComboBoxElement) {
-      // TODO: support re-assigning renderer function.
-      if (firstRender) {
-        const host = part.options?.host;
-        element.renderer = (
-          root: HTMLElement,
-          _comboBox: ComboBoxElement,
-          model: ComboBoxItemModel
-        ) => {
-          render(
-            this.render<T>(renderer, value)(model.item as T, model as ComboBoxModel<T>),
-            root,
-            { host }
-          );
-        };
-      } else {
-        element.render();
-      }
-    }
+    super.update(part, [renderer, value]);
 
     return nothing;
+  }
+
+  /**
+   * Set renderer callback to the element.
+   */
+  addRenderer<T>(
+    element: ElementWithRenderer,
+    renderer: Renderer,
+    value: unknown,
+    options: RenderOptions
+  ) {
+    element.renderer = (
+      root: HTMLElement,
+      _comboBox: ComboBoxElement,
+      model: ComboBoxItemModel
+    ) => {
+      render(
+        this.render<T>(renderer, value)(model.item as T, model as ComboBoxModel<T>),
+        root,
+        options
+      );
+    };
+  }
+
+  /**
+   * Run renderer callback on the element.
+   */
+  runRenderer(element: ElementWithRenderer) {
+    element.render();
   }
 }
 

@@ -7,8 +7,8 @@ interface HasLitDebouncer {
 }
 
 export abstract class GridRendererBase extends RendererBase {
-  debounce(element: HTMLElement, cb: () => unknown): void {
-    const el = element as HTMLElement & HasLitDebouncer;
+  debounce(element: Element, cb: () => unknown): void {
+    const el = (element as unknown) as HTMLElement & HasLitDebouncer;
     el._debounceLitRender = Debouncer.debounce(el._debounceLitRender, microTask, cb);
   }
 }

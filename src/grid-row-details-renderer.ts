@@ -1,11 +1,10 @@
-import { nothing, ElementPart, render, TemplateResult } from 'lit';
+import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
 import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
-import type { GridItemModel } from '@vaadin/vaadin-grid';
-import { GridElement } from '@vaadin/vaadin-grid';
+import { GridElement, GridItemModel } from '@vaadin/vaadin-grid';
+import { ElementWithRenderer, Renderer } from './renderer-base.js';
 import { GridRendererBase } from './grid-renderer-base.js';
-import type { GridModel } from './types.js';
 
-export type GridRowDetailsLitRenderer<T> = (item: T, model: GridModel<T>) => TemplateResult;
+export type GridRowDetailsLitRenderer<T> = (item: T, model: GridItemModel<T>) => TemplateResult;
 
 class GridRowDetailsRendererDirective extends GridRendererBase {
   constructor(part: PartInfo) {
@@ -21,37 +20,41 @@ class GridRowDetailsRendererDirective extends GridRendererBase {
   }
 
   update<T>(part: ElementPart, [renderer, value]: [GridRowDetailsLitRenderer<T>, unknown]) {
-    const firstRender = this.isFirstRender();
-
-    if (!this.hasChanged(value)) {
-      return nothing;
-    }
-
-    this.saveValue(value);
-
-    const element = part.element;
-    if (element instanceof GridElement) {
-      // TODO: support re-assigning renderer function.
-      if (firstRender) {
-        const host = part.options?.host;
-        element.rowDetailsRenderer = (
-          root: HTMLElement,
-          _grid?: GridElement,
-          model?: GridItemModel<T>
-        ) => {
-          const item = (model as GridItemModel<T>).item;
-          render(renderer(item as T, model as GridModel<T>), root, { host });
-        };
-      } else {
-        // Only call grid.render() once when if the property is changed,
-        // in case if that property is used by several column renderers.
-        this.debounce(element, () => {
-          element.render();
-        });
-      }
-    }
+    super.update(part, [renderer, value]);
 
     return nothing;
+  }
+
+  /**
+   * Set renderer callback to the element.
+   */
+  addRenderer<T>(
+    element: ElementWithRenderer,
+    renderer: Renderer,
+    value: unknown,
+    options: RenderOptions
+  ) {
+    ((element as unknown) as GridElement).rowDetailsRenderer = (
+      root: HTMLElement,
+      _grid?: GridElement,
+      model?: GridItemModel<T>
+    ) => {
+      if (model) {
+        const item = model.item;
+        render(this.render(renderer, value)(item, model), root, options);
+      }
+    };
+  }
+
+  /**
+   * Run renderer callback on the element.
+   */
+  runRenderer(element: ElementWithRenderer) {
+    // Only call grid.render() once when if the property is changed,
+    // in case if that property is used by several column renderers.
+    this.debounce(element, () => {
+      element.render();
+    });
   }
 }
 
