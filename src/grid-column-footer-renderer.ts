@@ -1,6 +1,5 @@
 import { nothing, ElementPart, render, TemplateResult } from 'lit';
 import { directive, PartInfo, PartType } from 'lit/directive.js';
-import type { GridElement } from '@vaadin/vaadin-grid';
 import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column';
 import { GridRendererBase } from './grid-renderer-base.js';
 
@@ -37,7 +36,7 @@ class GridColumnFooterRendererDirective extends GridRendererBase {
           render(renderer(column as GridColumnElement), root, { host });
         };
       } else {
-        const grid = (part.element as GridColumnElement)._grid as GridElement;
+        const grid = element._grid;
         if (grid) {
           // Only call grid.render() once when if the property is changed,
           // in case if that property is used by several column renderers.

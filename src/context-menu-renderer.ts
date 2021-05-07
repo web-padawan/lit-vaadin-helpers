@@ -1,7 +1,6 @@
 import { nothing, ElementPart, render, TemplateResult } from 'lit';
 import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
-import type { ContextMenuRendererContext } from '@vaadin/vaadin-context-menu';
-import { ContextMenuElement } from '@vaadin/vaadin-context-menu';
+import { ContextMenuElement, ContextMenuRendererContext } from '@vaadin/vaadin-context-menu';
 import { RendererBase } from './renderer-base.js';
 
 export type ContextMenuLitRenderer<T> = (target: HTMLElement, detail: T) => TemplateResult;

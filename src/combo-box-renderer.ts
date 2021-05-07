@@ -1,7 +1,6 @@
 import { nothing, ElementPart, render, TemplateResult } from 'lit';
 import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
-import { ComboBoxItemModel } from '@vaadin/vaadin-combo-box';
-import { ComboBoxElement } from '@vaadin/vaadin-combo-box';
+import { ComboBoxElement, ComboBoxItemModel } from '@vaadin/vaadin-combo-box';
 import { RendererBase } from './renderer-base.js';
 
 export interface ComboBoxModel<T> {

@@ -1,6 +1,6 @@
 import { nothing, ElementPart, render, TemplateResult } from 'lit';
 import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
-import type { GridElement, GridItemModel } from '@vaadin/vaadin-grid';
+import type { GridItemModel } from '@vaadin/vaadin-grid';
 import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column.js';
 import { GridRendererBase } from './grid-renderer-base.js';
 import type { GridModel } from './types.js';
@@ -43,7 +43,7 @@ class GridColumnBodyRendererDirective extends GridRendererBase {
           render(renderer(item as T, model as GridModel<T>), root, { host });
         };
       } else {
-        const grid = (part.element as GridColumnElement)._grid as GridElement;
+        const grid = element._grid;
         if (grid) {
           // Only call grid.render() once when if the property is changed,
           // in case if that property is used by several column renderers.
