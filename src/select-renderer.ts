@@ -1,9 +1,9 @@
 import { nothing, ElementPart, render, RenderOptions } from 'lit';
 import { directive, PartInfo, PartType } from 'lit/directive.js';
 import { SelectElement } from '@vaadin/vaadin-select';
-import { Renderer, RendererBase } from './renderer-base.js';
+import { AbstractRendererDirective, Renderer } from './abstract-renderer.js';
 
-class SelectRendererDirective extends RendererBase<SelectElement> {
+class SelectRendererDirective extends AbstractRendererDirective<SelectElement> {
   constructor(part: PartInfo) {
     super(part);
     if (part.type !== PartType.ELEMENT) {
@@ -25,12 +25,7 @@ class SelectRendererDirective extends RendererBase<SelectElement> {
   /**
    * Set renderer callback to the element.
    */
-  addRenderer(
-    element: SelectElement,
-    renderer: Renderer,
-    value: unknown,
-    options: RenderOptions
-  ) {
+  addRenderer(element: SelectElement, renderer: Renderer, value: unknown, options: RenderOptions) {
     element.renderer = (root: HTMLElement) => {
       render(this.render(renderer, value), root, options);
     };

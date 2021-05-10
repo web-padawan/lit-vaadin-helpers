@@ -1,12 +1,14 @@
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { microTask } from '@polymer/polymer/lib/utils/async.js';
-import { RendererBase } from './renderer-base.js';
+import { AbstractRendererDirective } from './abstract-renderer.js';
 
 interface HasLitDebouncer {
   _debounceLitRender: Debouncer;
 }
 
-export abstract class GridRendererBase<T extends Element> extends RendererBase<T> {
+export abstract class GridRendererDirective<
+  T extends Element
+> extends AbstractRendererDirective<T> {
   debounce(element: Element, cb: () => unknown): void {
     const el = (element as unknown) as HTMLElement & HasLitDebouncer;
     el._debounceLitRender = Debouncer.debounce(el._debounceLitRender, microTask, cb);

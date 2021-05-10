@@ -1,11 +1,11 @@
 import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
 import { directive, PartInfo, PartType } from 'lit/directive.js';
 import { ContextMenuElement, ContextMenuRendererContext } from '@vaadin/vaadin-context-menu';
-import { Renderer, RendererBase } from './renderer-base.js';
+import { AbstractRendererDirective, Renderer } from './abstract-renderer.js';
 
 export type ContextMenuLitRenderer = (context: ContextMenuRendererContext) => TemplateResult;
 
-class ContextMenuRendererDirective extends RendererBase<ContextMenuElement> {
+class ContextMenuRendererDirective extends AbstractRendererDirective<ContextMenuElement> {
   constructor(part: PartInfo) {
     super(part);
     if (part.type !== PartType.ELEMENT) {

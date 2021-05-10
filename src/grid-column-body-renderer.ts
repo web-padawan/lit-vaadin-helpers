@@ -2,12 +2,12 @@ import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit
 import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
 import type { GridItemModel } from '@vaadin/vaadin-grid';
 import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column.js';
-import { Renderer } from './renderer-base.js';
-import { GridRendererBase } from './grid-renderer-base.js';
+import { Renderer } from './abstract-renderer.js';
+import { GridRendererDirective } from './grid-renderer-base.js';
 
 export type GridColumnBodyLitRenderer<T> = (item: T, model: GridItemModel<T>) => TemplateResult;
 
-class GridColumnBodyRendererDirective extends GridRendererBase<GridColumnElement> {
+class GridColumnBodyRendererDirective extends GridRendererDirective<GridColumnElement> {
   constructor(part: PartInfo) {
     super(part);
     if (part.type !== PartType.ELEMENT) {

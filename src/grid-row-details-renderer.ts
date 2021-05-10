@@ -1,12 +1,12 @@
 import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
 import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
 import { GridElement, GridItemModel } from '@vaadin/vaadin-grid';
-import { Renderer } from './renderer-base.js';
-import { GridRendererBase } from './grid-renderer-base.js';
+import { Renderer } from './abstract-renderer.js';
+import { GridRendererDirective } from './grid-renderer-base.js';
 
 export type GridRowDetailsLitRenderer<T> = (item: T, model: GridItemModel<T>) => TemplateResult;
 
-class GridRowDetailsRendererDirective extends GridRendererBase<GridElement> {
+class GridRowDetailsRendererDirective extends GridRendererDirective<GridElement> {
   constructor(part: PartInfo) {
     super(part);
     if (part.type !== PartType.ELEMENT) {
@@ -28,12 +28,7 @@ class GridRowDetailsRendererDirective extends GridRendererBase<GridElement> {
   /**
    * Set renderer callback to the element.
    */
-  addRenderer<T>(
-    element: GridElement,
-    renderer: Renderer,
-    value: unknown,
-    options: RenderOptions
-  ) {
+  addRenderer<T>(element: GridElement, renderer: Renderer, value: unknown, options: RenderOptions) {
     element.rowDetailsRenderer = (
       root: HTMLElement,
       _grid?: GridElement,

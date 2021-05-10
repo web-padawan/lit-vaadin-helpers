@@ -6,7 +6,7 @@ export type Renderer = (...args: any[]) => TemplateResult;
 // A sentinel that indicates renderer hasn't been initialized
 const initialValue = {};
 
-export abstract class RendererBase<T extends Element> extends Directive {
+export abstract class AbstractRendererDirective<T extends Element> extends Directive {
   previousValue: unknown = initialValue;
 
   update(part: ElementPart, [renderer, value]: [Renderer, unknown]) {

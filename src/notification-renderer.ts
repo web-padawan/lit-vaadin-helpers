@@ -1,9 +1,9 @@
 import { nothing, ElementPart, render, RenderOptions } from 'lit';
 import { directive, PartInfo, PartType } from 'lit/directive.js';
 import { NotificationElement } from '@vaadin/vaadin-notification';
-import { Renderer, RendererBase } from './renderer-base.js';
+import { AbstractRendererDirective, Renderer } from './abstract-renderer.js';
 
-class NotificationRendererDirective extends RendererBase<NotificationElement> {
+class NotificationRendererDirective extends AbstractRendererDirective<NotificationElement> {
   constructor(part: PartInfo) {
     super(part);
     if (part.type !== PartType.ELEMENT) {
