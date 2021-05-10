@@ -1,26 +1,64 @@
 # lit-vaadin-helpers
 
-Helpers for using [Vaadin web components](https://github.com/vaadin/web-components) with Lit 2.
+Helpers for using [Vaadin web components](https://github.com/vaadin/web-components) with [Lit 2](https://lit.dev).
 
-## Install dependencies
+## Installation
+
+```sh
+npm install lit-vaadin-helpers
+```
+
+## Usage
+
+```js
+import { html, LitElement } from 'lit';
+import '@vaadin/vaadin-select';
+import '@vaadin/vaadin-list-box';
+import '@vaadin/vaadin-item';
+import { selectRenderer } from 'lit-vaadin-helpers';
+
+class DialogDemo extends LitElement {
+  render() {
+    return html`
+      <vaadin-select
+        ${selectRenderer(
+          () => html`
+            <vaadin-list-box>
+              <vaadin-item>Option 1</vaadin-item>
+              <vaadin-item>Option 2</vaadin-item>
+              <vaadin-item>Option 3</vaadin-item>
+            </vaadin-list-box>
+          `
+        )}
+      ></vaadin-select>
+    `;
+  }
+}
+```
+
+See [demo folder](https://github.com/web-padawan/lit-vaadin-helpers/tree/master/src/demo) for more examples.
+
+## Contributing
+
+### Install dependencies
 
 ```sh
 npm install
 ```
 
-## Run build
+### Run build
 
 ```sh
 npm run build
 ```
 
-## Run demo
+### Run demo
 
 ```sh
 npm run dev
 ```
 
-## Run unit tets
+### Run unit tets
 
 ```sh
 npm test
