@@ -10,31 +10,36 @@ import '@vaadin/vaadin-item/vaadin-item.js';
 import type { ContextMenuElement } from '@vaadin/vaadin-context-menu';
 import type { OverlayElement } from '@vaadin/vaadin-overlay';
 import type { ItemElement } from '@vaadin/vaadin-item/vaadin-item.js';
-import { contextMenuRenderer } from '../index.js';
+import { contextMenuRenderer, ContextMenuLitRenderer } from '../index.js';
 
 class ActionSelector extends LitElement {
   @property({ type: Array }) actions = ['Edit', 'Delete'];
 
   @property({ type: String }) openOn = 'click';
 
+  private menuContent!: ContextMenuLitRenderer;
+
+  constructor() {
+    super();
+
+    this.menuContent = ({ target }) => html`
+      <vaadin-list-box>
+        ${this.actions.map(
+          (name) => html`
+            <vaadin-item .value="${name} ${target.id}" @click="${this.onItemClick}">
+              ${name} ${target.id}
+            </vaadin-item>
+          `
+        )}
+      </vaadin-list-box>
+    `;
+  }
+
   render() {
     return html`
       <vaadin-context-menu
         .openOn="${this.openOn}"
-        ${contextMenuRenderer(
-          ({ target }) => html`
-            <vaadin-list-box>
-              ${this.actions.map(
-                (name) => html`
-                  <vaadin-item .value="${name} ${target.id}" @click="${this.onItemClick}">
-                    ${name} ${target.id}
-                  </vaadin-item>
-                `
-              )}
-            </vaadin-list-box>
-          `,
-          this.actions
-        )}
+        ${contextMenuRenderer(this.menuContent, this.actions)}
       >
         <div id="1">First paragraph</div>
         <div id="2">Second paragraph</div>

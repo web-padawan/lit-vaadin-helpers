@@ -11,8 +11,12 @@ class ContextMenuRendererDemo extends LitElement {
 
   @property({ type: String }) selectedAction = '';
 
-  render() {
-    const menuContent: ContextMenuLitRenderer = ({ target }) => html`
+  private menuContent!: ContextMenuLitRenderer;
+
+  constructor() {
+    super();
+
+    this.menuContent = ({ target }) => html`
       <vaadin-list-box>
         ${this.actions.map(
           (name) => html`
@@ -23,9 +27,11 @@ class ContextMenuRendererDemo extends LitElement {
         )}
       </vaadin-list-box>
     `;
+  }
 
+  render() {
     return html`
-      <vaadin-context-menu ${contextMenuRenderer(menuContent, this.actions)}>
+      <vaadin-context-menu ${contextMenuRenderer(this.menuContent, this.actions)}>
         <div id="1">First paragraph with the context-menu.</div>
         <div id="2">Second paragraph which uses the same context menu.</div>
       </vaadin-context-menu>
