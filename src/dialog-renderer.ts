@@ -33,8 +33,8 @@ class DialogRendererDirective extends AbstractRendererDirective<DialogElement> {
     value: unknown,
     options: RenderOptions
   ) {
-    element.renderer = (root: HTMLElement) => {
-      render(this.render(renderer, value), root, options);
+    element.renderer = (root: HTMLElement, dialog?: DialogElement) => {
+      render(this.render(renderer, value)(dialog as DialogElement), root, options);
     };
   }
 
