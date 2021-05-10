@@ -1,6 +1,6 @@
 # lit-vaadin-helpers
 
-Prototyping a set of helpers for using Vaadin components with LitElement.
+Helpers for using [Vaadin web components](https://github.com/vaadin/web-components) with Lit 2.
 
 ## Install dependencies
 
