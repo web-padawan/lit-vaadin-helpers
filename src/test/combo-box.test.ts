@@ -7,7 +7,7 @@ import { PolymerElement } from '@polymer/polymer';
 import '@vaadin/vaadin-combo-box/vaadin-combo-box.js';
 import type { ComboBoxElement } from '@vaadin/vaadin-combo-box';
 import type { OverlayElement } from '@vaadin/vaadin-overlay';
-import { comboBoxRenderer } from '../src/index.js';
+import { comboBoxRenderer } from '../index.js';
 
 interface User {
   name: {

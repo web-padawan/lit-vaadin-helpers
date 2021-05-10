@@ -7,9 +7,9 @@
   "scripts": {
     "build": "tsc",
     "dev": "npm run watch & npm run serve",
-    "lint": "eslint src test --ext .ts --ignore-path .gitignore",
-    "serve": "web-dev-server --node-resolve --app-index demo/index.html --open --port 8081",
-    "test": "wtr test/*.test.ts",
+    "lint": "eslint src --ext .ts --ignore-path .gitignore",
+    "serve": "web-dev-server --node-resolve --open --port 8081",
+    "test": "wtr src/test/*.test.ts",
     "watch": "tsc-watch"
   },
   "dependencies": {

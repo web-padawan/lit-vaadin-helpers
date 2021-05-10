@@ -3,7 +3,7 @@ import { property } from 'lit/decorators.js';
 import '@vaadin/vaadin-select';
 import '@vaadin/vaadin-list-box';
 import '@vaadin/vaadin-item';
-import { selectRenderer } from '../src/index.js';
+import { selectRenderer } from '../index.js';
 
 class SelectRendererDemo extends LitElement {
   @property({ attribute: false }) statuses = [

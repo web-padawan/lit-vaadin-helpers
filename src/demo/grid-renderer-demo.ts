@@ -12,7 +12,7 @@ import {
   columnHeaderRenderer,
   columnFooterRenderer,
   gridRowDetailsRenderer
-} from '../src/index.js';
+} from '../index.js';
 
 interface User {
   name: {
@@ -117,7 +117,7 @@ class GridRendererDemo extends LitElement {
   }
 
   firstUpdated() {
-    fetch('./data.json')
+    fetch('/data/data.json')
       .then((r) => r.json())
       .then((data) => {
         this.users = data;

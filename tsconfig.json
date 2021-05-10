@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": ".",
+    "outDir": "dist",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
@@ -17,8 +17,6 @@
     "experimentalDecorators": true,
     "importHelpers": true
   },
-  "include": [
-    "**/*.ts"
-  ],
+  "include": ["src/**/*.ts"],
   "exclude": []
 }

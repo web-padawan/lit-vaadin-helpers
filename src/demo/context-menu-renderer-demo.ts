@@ -4,7 +4,7 @@ import '@vaadin/vaadin-context-menu/vaadin-context-menu.js';
 import '@vaadin/vaadin-list-box/vaadin-list-box.js';
 import '@vaadin/vaadin-item/vaadin-item.js';
 import type { ItemElement } from '@vaadin/vaadin-item';
-import { contextMenuRenderer } from '../src/index.js';
+import { contextMenuRenderer } from '../index.js';
 
 class ContextMenuRendererDemo extends LitElement {
   @property({ type: Array }) actions = ['Edit', 'Delete'];
