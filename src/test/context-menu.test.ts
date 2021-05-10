@@ -17,23 +17,17 @@ class ActionSelector extends LitElement {
 
   @property({ type: String }) openOn = 'click';
 
-  private menuContent!: ContextMenuLitRenderer;
-
-  constructor() {
-    super();
-
-    this.menuContent = ({ target }) => html`
-      <vaadin-list-box>
-        ${this.actions.map(
-          (name) => html`
-            <vaadin-item .value="${name} ${target.id}" @click="${this.onItemClick}">
-              ${name} ${target.id}
-            </vaadin-item>
-          `
-        )}
-      </vaadin-list-box>
-    `;
-  }
+  private menuContent: ContextMenuLitRenderer = ({ target }) => html`
+    <vaadin-list-box>
+      ${this.actions.map(
+        (name) => html`
+          <vaadin-item .value="${name} ${target.id}" @click="${this.onItemClick}">
+            ${name} ${target.id}
+          </vaadin-item>
+        `
+      )}
+    </vaadin-list-box>
+  `;
 
   render() {
     return html`
