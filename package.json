@@ -1,9 +1,16 @@
 {
   "name": "lit-vaadin-helpers",
-  "private": true,
+  "version": "0.0.0",
   "description": "Prototyping helpers for using Vaadin components with lit-element",
   "author": "Serhii Kulykov <iamkulykov@gmail.com>",
   "license": "MIT",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "/dist/",
+    "!/dist/demo/",
+    "!/dist/test/"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "npm run watch & npm run serve",
