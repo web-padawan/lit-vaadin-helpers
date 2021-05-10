@@ -9,7 +9,7 @@ class ContextMenuRendererDirective extends RendererBase {
   constructor(part: PartInfo) {
     super(part);
     if (part.type !== PartType.ELEMENT) {
-      throw new Error('Only supports binding to renderer property');
+      throw new Error('Only supports binding to element');
     }
   }
 
