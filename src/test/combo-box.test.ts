@@ -7,7 +7,7 @@ import { PolymerElement } from '@polymer/polymer';
 import '@vaadin/vaadin-combo-box/vaadin-combo-box.js';
 import type { ComboBoxElement } from '@vaadin/vaadin-combo-box';
 import type { OverlayElement } from '@vaadin/vaadin-overlay';
-import { comboBoxRenderer } from '../index.js';
+import { comboBoxRenderer, ComboBoxLitRenderer } from '../index.js';
 
 interface User {
   name: {
@@ -34,6 +34,10 @@ class UserSelector extends LitElement {
 
   @property({ type: String }) separator = ' ';
 
+  private renderItem: ComboBoxLitRenderer<User> = ({ name }) => {
+    return html`<b @click="${this.onItemClick}">${name.first}${this.separator}${name.last}</b>`;
+  };
+
   render() {
     return html`
       <vaadin-combo-box
@@ -41,11 +45,7 @@ class UserSelector extends LitElement {
         .items="${this.users}"
         item-value-path="name.last"
         item-label-path="name.last"
-        ${comboBoxRenderer<User>(
-          ({ name }) =>
-            html`<b @click="${this.onItemClick}">${name.first}${this.separator}${name.last}</b>`,
-          this.separator
-        )}
+        ${comboBoxRenderer(this.renderItem, this.separator)}
       ></vaadin-combo-box>
     `;
   }

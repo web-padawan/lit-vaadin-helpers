@@ -44,7 +44,7 @@ class GridRowDetailsRendererDirective extends GridRendererDirective<GridElement>
     ) => {
       if (model && grid) {
         const item = model.item;
-        render(this.render(renderer, value)(item, model, grid), root, options);
+        render(this.render(renderer, value).call(options.host, item, model, grid), root, options);
       }
     };
   }

@@ -1,33 +1,35 @@
 import { expect } from '@esm-bundle/chai';
 import sinon from 'sinon';
 import { fixture, nextFrame } from '@open-wc/testing-helpers';
-import { LitElement, html } from 'lit';
+import { LitElement, html, TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { PolymerElement } from '@polymer/polymer';
 import '@vaadin/vaadin-context-menu/vaadin-context-menu.js';
 import '@vaadin/vaadin-list-box/vaadin-list-box.js';
 import '@vaadin/vaadin-item/vaadin-item.js';
-import type { ContextMenuElement } from '@vaadin/vaadin-context-menu';
+import type { ContextMenuElement, ContextMenuRendererContext } from '@vaadin/vaadin-context-menu';
 import type { OverlayElement } from '@vaadin/vaadin-overlay';
 import type { ItemElement } from '@vaadin/vaadin-item/vaadin-item.js';
-import { contextMenuRenderer, ContextMenuLitRenderer } from '../index.js';
+import { contextMenuRenderer } from '../index.js';
 
 class ActionSelector extends LitElement {
   @property({ type: Array }) actions = ['Edit', 'Delete'];
 
   @property({ type: String }) openOn = 'click';
 
-  private menuContent: ContextMenuLitRenderer = ({ target }) => html`
-    <vaadin-list-box>
-      ${this.actions.map(
-        (name) => html`
-          <vaadin-item .value="${name} ${target.id}" @click="${this.onItemClick}">
-            ${name} ${target.id}
-          </vaadin-item>
-        `
-      )}
-    </vaadin-list-box>
-  `;
+  menuContent({ target }: ContextMenuRendererContext): TemplateResult {
+    return html`
+      <vaadin-list-box>
+        ${this.actions.map(
+          (name) => html`
+            <vaadin-item .value="${name} ${target.id}" @click="${this.onItemClick}">
+              ${name} ${target.id}
+            </vaadin-item>
+          `
+        )}
+      </vaadin-list-box>
+    `;
+  }
 
   render() {
     return html`

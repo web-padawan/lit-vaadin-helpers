@@ -35,7 +35,7 @@ class NotificationRendererDirective extends AbstractRendererDirective<Notificati
   ) {
     element.renderer = (root: HTMLElement, notification?: NotificationElement) => {
       if (notification) {
-        render(this.render(renderer, value)(notification), root, options);
+        render(this.render(renderer, value).call(options.host, notification), root, options);
       }
     };
   }

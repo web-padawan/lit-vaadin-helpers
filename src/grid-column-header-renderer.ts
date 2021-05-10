@@ -34,7 +34,11 @@ class GridColumnHeaderRendererDirective extends GridRendererDirective<GridColumn
     options: RenderOptions
   ) {
     element.headerRenderer = (root: HTMLElement, column?: GridColumnElement) => {
-      render(this.render(renderer, value)(column as GridColumnElement), root, options);
+      render(
+        this.render(renderer, value).call(options.host, column as GridColumnElement),
+        root,
+        options
+      );
     };
   }
 

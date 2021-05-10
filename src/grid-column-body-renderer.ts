@@ -45,7 +45,7 @@ class GridColumnBodyRendererDirective extends GridRendererDirective<GridColumnEl
     ) => {
       if (model && column) {
         const item = model.item;
-        render(this.render(renderer, value)(item, model, column), root, options);
+        render(this.render(renderer, value).call(options.host, item, model, column), root, options);
       }
     };
   }

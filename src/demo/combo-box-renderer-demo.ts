@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
 import '@vaadin/vaadin-combo-box/vaadin-combo-box.js';
-import { comboBoxRenderer } from '../index.js';
+import { comboBoxRenderer, ComboBoxLitRenderer } from '../index.js';
 
 interface User {
   name: {
@@ -28,6 +28,10 @@ class ComboBoxRendererDemo extends LitElement {
 
   @property({ type: String }) separator = ' ';
 
+  private renderItem: ComboBoxLitRenderer<User> = (item) => {
+    return html`<b>${item.name.first}${this.separator}${item.name.last}</b>`;
+  };
+
   render() {
     return html`
       <vaadin-combo-box
@@ -35,10 +39,7 @@ class ComboBoxRendererDemo extends LitElement {
         .items="${this.users}"
         item-value-path="name.last"
         item-label-path="name.last"
-        ${comboBoxRenderer<User>(
-          (item) => html`<b>${item.name.first}${this.separator}${item.name.last}</b>`,
-          this.separator
-        )}
+        ${comboBoxRenderer(this.renderItem, this.separator)}
       ></vaadin-combo-box>
     `;
   }

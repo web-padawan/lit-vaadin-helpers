@@ -42,7 +42,7 @@ class ContextMenuRendererDirective extends AbstractRendererDirective<ContextMenu
       context?: ContextMenuRendererContext
     ) => {
       if (context && menu) {
-        render(this.render(renderer, value)(context, menu), root, options);
+        render(this.render(renderer, value).call(options.host, context, menu), root, options);
       }
     };
   }

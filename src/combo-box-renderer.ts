@@ -44,7 +44,12 @@ class ComboBoxRendererDirective extends AbstractRendererDirective<ComboBoxElemen
   ) {
     element.renderer = (root: HTMLElement, comboBox: ComboBoxElement, model: ComboBoxItemModel) => {
       render(
-        this.render<T>(renderer, value)(model.item as T, model as ComboBoxModel<T>, comboBox),
+        this.render<T>(renderer, value).call(
+          options.host,
+          model.item as T,
+          model as ComboBoxModel<T>,
+          comboBox
+        ),
         root,
         options
       );

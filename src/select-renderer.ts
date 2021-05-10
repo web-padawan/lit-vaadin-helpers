@@ -35,7 +35,7 @@ class SelectRendererDirective extends AbstractRendererDirective<SelectElement> {
   ) {
     element.renderer = (root: HTMLElement, select?: SelectElement) => {
       if (select) {
-        render(this.render(renderer, value)(select), root, options);
+        render(this.render(renderer, value).call(options.host, select), root, options);
       }
     };
   }

@@ -1,27 +1,30 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import '@vaadin/vaadin-context-menu/vaadin-context-menu.js';
 import '@vaadin/vaadin-list-box/vaadin-list-box.js';
 import '@vaadin/vaadin-item/vaadin-item.js';
 import type { ItemElement } from '@vaadin/vaadin-item';
-import { contextMenuRenderer, ContextMenuLitRenderer } from '../index.js';
+import { contextMenuRenderer } from '../index.js';
+import { ContextMenuRendererContext } from '@vaadin/vaadin-context-menu/vaadin-context-menu.js';
 
 class ContextMenuRendererDemo extends LitElement {
   @property({ type: Array }) actions = ['Edit', 'Delete'];
 
   @property({ type: String }) selectedAction = '';
 
-  private menuContent: ContextMenuLitRenderer = ({ target }) => html`
-    <vaadin-list-box>
-      ${this.actions.map(
-        (name) => html`
-          <vaadin-item .value="${name} ${target.id}" @click="${this.onItemClick}">
-            ${name} ${target.id}
-          </vaadin-item>
-        `
-      )}
-    </vaadin-list-box>
-  `;
+  menuContent({ target }: ContextMenuRendererContext): TemplateResult {
+    return html`
+      <vaadin-list-box>
+        ${this.actions.map(
+          (name) => html`
+            <vaadin-item .value="${name} ${target.id}" @click="${this.onItemClick}">
+              ${name} ${target.id}
+            </vaadin-item>
+          `
+        )}
+      </vaadin-list-box>
+    `;
+  }
 
   render() {
     return html`
