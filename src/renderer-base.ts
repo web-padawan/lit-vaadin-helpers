@@ -3,15 +3,10 @@ import { Directive, ElementPart } from 'lit/directive.js';
 
 export type Renderer = (...args: any[]) => TemplateResult;
 
-export type ElementWithRenderer = Element & {
-  renderer: (root: HTMLElement, ...args: any[]) => void;
-  render(): void;
-};
-
 // A sentinel that indicates renderer hasn't been initialized
 const initialValue = {};
 
-export abstract class RendererBase extends Directive {
+export abstract class RendererBase<T extends Element> extends Directive {
   previousValue: unknown = initialValue;
 
   update(part: ElementPart, [renderer, value]: [Renderer, unknown]) {
@@ -25,7 +20,7 @@ export abstract class RendererBase extends Directive {
     // what the previous values were.
     this.previousValue = Array.isArray(value) ? Array.from(value) : value;
 
-    const element = part.element as ElementWithRenderer;
+    const element = part.element as T;
 
     // TODO: support re-assigning renderer function.
     if (firstRender) {
@@ -61,7 +56,7 @@ export abstract class RendererBase extends Directive {
    * Set renderer callback to the element.
    */
   abstract addRenderer(
-    element: ElementWithRenderer,
+    element: T,
     renderer: Renderer,
     value: unknown,
     options: RenderOptions
@@ -70,5 +65,5 @@ export abstract class RendererBase extends Directive {
   /**
    * Run renderer callback on the element.
    */
-  abstract runRenderer(element: ElementWithRenderer): void;
+  abstract runRenderer(element: T): void;
 }

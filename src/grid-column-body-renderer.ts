@@ -2,12 +2,12 @@ import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit
 import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
 import type { GridItemModel } from '@vaadin/vaadin-grid';
 import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column.js';
-import { ElementWithRenderer, Renderer } from './renderer-base.js';
+import { Renderer } from './renderer-base.js';
 import { GridRendererBase } from './grid-renderer-base.js';
 
 export type GridColumnBodyLitRenderer<T> = (item: T, model: GridItemModel<T>) => TemplateResult;
 
-class GridColumnBodyRendererDirective extends GridRendererBase {
+class GridColumnBodyRendererDirective extends GridRendererBase<GridColumnElement> {
   constructor(part: PartInfo) {
     super(part);
     if (part.type !== PartType.ELEMENT) {
@@ -30,7 +30,7 @@ class GridColumnBodyRendererDirective extends GridRendererBase {
    * Set renderer callback to the element.
    */
   addRenderer<T>(
-    element: ElementWithRenderer,
+    element: GridColumnElement,
     renderer: Renderer,
     value: unknown,
     options: RenderOptions
@@ -50,8 +50,8 @@ class GridColumnBodyRendererDirective extends GridRendererBase {
   /**
    * Run renderer callback on the element.
    */
-  runRenderer(element: ElementWithRenderer) {
-    const grid = ((element as unknown) as GridColumnElement)._grid;
+  runRenderer(element: GridColumnElement) {
+    const grid = element._grid;
     if (grid) {
       // Only call grid.render() once when if the property is changed,
       // in case if that property is used by several column renderers.

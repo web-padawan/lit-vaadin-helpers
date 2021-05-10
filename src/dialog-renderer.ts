@@ -1,8 +1,9 @@
 import { nothing, ElementPart, render, RenderOptions } from 'lit';
 import { directive, PartInfo, PartType } from 'lit/directive.js';
-import { ElementWithRenderer, Renderer, RendererBase } from './renderer-base.js';
+import { DialogElement } from '@vaadin/vaadin-dialog';
+import { Renderer, RendererBase } from './renderer-base.js';
 
-class RendererDirective extends RendererBase {
+class DialogRendererDirective extends RendererBase<DialogElement> {
   constructor(part: PartInfo) {
     super(part);
     if (part.type !== PartType.ELEMENT) {
@@ -25,7 +26,7 @@ class RendererDirective extends RendererBase {
    * Set renderer callback to the element.
    */
   addRenderer(
-    element: ElementWithRenderer,
+    element: DialogElement,
     renderer: Renderer,
     value: unknown,
     options: RenderOptions
@@ -38,9 +39,9 @@ class RendererDirective extends RendererBase {
   /**
    * Run renderer callback on the element.
    */
-  runRenderer(element: ElementWithRenderer) {
+  runRenderer(element: DialogElement) {
     element.render();
   }
 }
 
-export const renderer = directive(RendererDirective);
+export const dialogRenderer = directive(DialogRendererDirective);

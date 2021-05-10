@@ -4,7 +4,7 @@ import '@vaadin/vaadin-button/vaadin-button.js';
 import '@vaadin/vaadin-date-picker/vaadin-date-picker.js';
 import '@vaadin/vaadin-dialog/vaadin-dialog.js';
 import type { DatePickerElement } from '@vaadin/vaadin-date-picker';
-import { renderer } from '../src/index.js';
+import { dialogRenderer } from '../src/index.js';
 
 class DialogRendererDemo extends LitElement {
   @property({ type: Boolean }) opened = false;
@@ -19,7 +19,7 @@ class DialogRendererDemo extends LitElement {
         .opened=${this.opened}
         @opened-changed="${this.onOpenedChanged}"
         modeless
-        ${renderer(
+        ${dialogRenderer(
           () => html`
             <vaadin-date-picker
               label="Select date"

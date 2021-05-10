@@ -8,7 +8,7 @@ import type { OverlayElement } from '@vaadin/vaadin-overlay';
 import '@vaadin/vaadin-select';
 import '@vaadin/vaadin-list-box';
 import '@vaadin/vaadin-item';
-import { renderer } from '../src/index.js';
+import { selectRenderer } from '../src/index.js';
 
 class StatusSelector extends LitElement {
   @property({ attribute: false }) statuses = [
@@ -23,7 +23,7 @@ class StatusSelector extends LitElement {
     return html`
       <vaadin-select
         label="${this.label}"
-        ${renderer(
+        ${selectRenderer(
           () => html`
             <vaadin-list-box>
               ${this.statuses.map(

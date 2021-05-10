@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
 import '@vaadin/vaadin-button/vaadin-button.js';
 import '@vaadin/vaadin-notification/vaadin-notification.js';
-import { renderer } from '../src/index.js';
+import { notificationRenderer } from '../src/index.js';
 
 class NotificationRendererDemo extends LitElement {
   @property({ type: Boolean }) opened = false;
@@ -17,7 +17,7 @@ class NotificationRendererDemo extends LitElement {
         position="top-start"
         duration="-1"
         @opened-changed="${this.onOpenedChanged}"
-        ${renderer(() => html`Opened&nbsp;<b>${this.count}</b>&nbsp;times`, this.count)}
+        ${notificationRenderer(() => html`Opened&nbsp;<b>${this.count}</b>&nbsp;times`, this.count)}
       ></vaadin-notification>
     `;
   }

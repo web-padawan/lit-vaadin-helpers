@@ -1,11 +1,11 @@
 import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
 import { directive, PartInfo, PartType } from 'lit/directive.js';
 import { ContextMenuElement, ContextMenuRendererContext } from '@vaadin/vaadin-context-menu';
-import { ElementWithRenderer, Renderer, RendererBase } from './renderer-base.js';
+import { Renderer, RendererBase } from './renderer-base.js';
 
 export type ContextMenuLitRenderer = (context: ContextMenuRendererContext) => TemplateResult;
 
-class ContextMenuRendererDirective extends RendererBase {
+class ContextMenuRendererDirective extends RendererBase<ContextMenuElement> {
   constructor(part: PartInfo) {
     super(part);
     if (part.type !== PartType.ELEMENT) {
@@ -28,7 +28,7 @@ class ContextMenuRendererDirective extends RendererBase {
    * Set renderer callback to the element.
    */
   addRenderer(
-    element: ElementWithRenderer,
+    element: ContextMenuElement,
     renderer: Renderer,
     value: unknown,
     options: RenderOptions
@@ -47,7 +47,7 @@ class ContextMenuRendererDirective extends RendererBase {
   /**
    * Run renderer callback on the element.
    */
-  runRenderer(element: ElementWithRenderer) {
+  runRenderer(element: ContextMenuElement) {
     element.render();
   }
 }
