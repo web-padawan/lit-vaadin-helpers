@@ -1,7 +1,7 @@
 import { nothing, RenderOptions, TemplateResult } from 'lit';
 import { Directive, ElementPart } from 'lit/directive.js';
 
-export type Renderer = (...args: any[]) => TemplateResult;
+export type AbstractLitRenderer = (...args: any[]) => TemplateResult;
 
 // A sentinel that indicates renderer hasn't been initialized
 const initialValue = {};
@@ -9,7 +9,7 @@ const initialValue = {};
 export abstract class AbstractRendererDirective<T extends Element> extends Directive {
   previousValue: unknown = initialValue;
 
-  update(part: ElementPart, [renderer, value]: [Renderer, unknown]) {
+  update(part: ElementPart, [renderer, value]: [AbstractLitRenderer, unknown]): unknown {
     const firstRender = this.previousValue === initialValue;
 
     if (!this.hasChanged(value)) {
@@ -57,7 +57,7 @@ export abstract class AbstractRendererDirective<T extends Element> extends Direc
    */
   abstract addRenderer(
     element: T,
-    renderer: Renderer,
+    renderer: AbstractLitRenderer,
     value: unknown,
     options: RenderOptions
   ): void;

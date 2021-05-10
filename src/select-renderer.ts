@@ -1,7 +1,9 @@
-import { nothing, ElementPart, render, RenderOptions } from 'lit';
-import { directive, PartInfo, PartType } from 'lit/directive.js';
+import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
+import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
 import { SelectElement } from '@vaadin/vaadin-select';
-import { AbstractRendererDirective, Renderer } from './abstract-renderer.js';
+import { AbstractRendererDirective } from './abstract-renderer.js';
+
+export type SelectLitRenderer = (select: SelectElement) => TemplateResult;
 
 class SelectRendererDirective extends AbstractRendererDirective<SelectElement> {
   constructor(part: PartInfo) {
@@ -12,11 +14,11 @@ class SelectRendererDirective extends AbstractRendererDirective<SelectElement> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  render(renderer: Renderer, _value?: unknown) {
-    return renderer();
+  render(renderer: SelectLitRenderer, _value?: unknown) {
+    return renderer;
   }
 
-  update(part: ElementPart, [renderer, value]: [Renderer, unknown]) {
+  update(part: ElementPart, [renderer, value]: [SelectLitRenderer, unknown]) {
     super.update(part, [renderer, value]);
 
     return nothing;
@@ -25,9 +27,16 @@ class SelectRendererDirective extends AbstractRendererDirective<SelectElement> {
   /**
    * Set renderer callback to the element.
    */
-  addRenderer(element: SelectElement, renderer: Renderer, value: unknown, options: RenderOptions) {
-    element.renderer = (root: HTMLElement) => {
-      render(this.render(renderer, value), root, options);
+  addRenderer(
+    element: SelectElement,
+    renderer: SelectLitRenderer,
+    value: unknown,
+    options: RenderOptions
+  ) {
+    element.renderer = (root: HTMLElement, select?: SelectElement) => {
+      if (select) {
+        render(this.render(renderer, value)(select), root, options);
+      }
     };
   }
 
@@ -39,4 +48,9 @@ class SelectRendererDirective extends AbstractRendererDirective<SelectElement> {
   }
 }
 
-export const selectRenderer = directive(SelectRendererDirective);
+const rendererDirective = directive(SelectRendererDirective);
+
+export const selectRenderer = (
+  renderer: SelectLitRenderer,
+  value?: unknown
+): DirectiveResult<typeof SelectRendererDirective> => rendererDirective(renderer, value);

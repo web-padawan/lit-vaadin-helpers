@@ -1,7 +1,9 @@
-import { nothing, ElementPart, render, RenderOptions } from 'lit';
-import { directive, PartInfo, PartType } from 'lit/directive.js';
+import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
+import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
 import { NotificationElement } from '@vaadin/vaadin-notification';
-import { AbstractRendererDirective, Renderer } from './abstract-renderer.js';
+import { AbstractRendererDirective } from './abstract-renderer.js';
+
+export type NotificationLitRenderer = (notification: NotificationElement) => TemplateResult;
 
 class NotificationRendererDirective extends AbstractRendererDirective<NotificationElement> {
   constructor(part: PartInfo) {
@@ -12,11 +14,11 @@ class NotificationRendererDirective extends AbstractRendererDirective<Notificati
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  render(renderer: Renderer, _value?: unknown) {
-    return renderer();
+  render(renderer: NotificationLitRenderer, _value?: unknown) {
+    return renderer;
   }
 
-  update(part: ElementPart, [renderer, value]: [Renderer, unknown]) {
+  update(part: ElementPart, [renderer, value]: [NotificationLitRenderer, unknown]) {
     super.update(part, [renderer, value]);
 
     return nothing;
@@ -27,12 +29,14 @@ class NotificationRendererDirective extends AbstractRendererDirective<Notificati
    */
   addRenderer(
     element: NotificationElement,
-    renderer: Renderer,
+    renderer: NotificationLitRenderer,
     value: unknown,
     options: RenderOptions
   ) {
-    element.renderer = (root: HTMLElement) => {
-      render(this.render(renderer, value), root, options);
+    element.renderer = (root: HTMLElement, notification?: NotificationElement) => {
+      if (notification) {
+        render(this.render(renderer, value)(notification), root, options);
+      }
     };
   }
 
@@ -44,4 +48,9 @@ class NotificationRendererDirective extends AbstractRendererDirective<Notificati
   }
 }
 
-export const notificationRenderer = directive(NotificationRendererDirective);
+const rendererDirective = directive(NotificationRendererDirective);
+
+export const notificationRenderer = (
+  renderer: NotificationLitRenderer,
+  value?: unknown
+): DirectiveResult<typeof NotificationRendererDirective> => rendererDirective(renderer, value);

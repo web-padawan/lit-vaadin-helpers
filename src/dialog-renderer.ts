@@ -1,7 +1,9 @@
-import { nothing, ElementPart, render, RenderOptions } from 'lit';
-import { directive, PartInfo, PartType } from 'lit/directive.js';
+import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
+import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
 import { DialogElement } from '@vaadin/vaadin-dialog';
-import { AbstractRendererDirective, Renderer } from './abstract-renderer.js';
+import { AbstractRendererDirective } from './abstract-renderer.js';
+
+export type DialogLitRenderer = (dialog: DialogElement) => TemplateResult;
 
 class DialogRendererDirective extends AbstractRendererDirective<DialogElement> {
   constructor(part: PartInfo) {
@@ -12,11 +14,11 @@ class DialogRendererDirective extends AbstractRendererDirective<DialogElement> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  render(renderer: Renderer, _value?: unknown) {
-    return renderer();
+  render(renderer: DialogLitRenderer, _value?: unknown) {
+    return renderer;
   }
 
-  update(part: ElementPart, [renderer, value]: [Renderer, unknown]) {
+  update(part: ElementPart, [renderer, value]: [DialogLitRenderer, unknown]) {
     super.update(part, [renderer, value]);
 
     return nothing;
@@ -25,7 +27,12 @@ class DialogRendererDirective extends AbstractRendererDirective<DialogElement> {
   /**
    * Set renderer callback to the element.
    */
-  addRenderer(element: DialogElement, renderer: Renderer, value: unknown, options: RenderOptions) {
+  addRenderer(
+    element: DialogElement,
+    renderer: DialogLitRenderer,
+    value: unknown,
+    options: RenderOptions
+  ) {
     element.renderer = (root: HTMLElement) => {
       render(this.render(renderer, value), root, options);
     };
@@ -39,4 +46,9 @@ class DialogRendererDirective extends AbstractRendererDirective<DialogElement> {
   }
 }
 
-export const dialogRenderer = directive(DialogRendererDirective);
+const rendererDirective = directive(DialogRendererDirective);
+
+export const dialogRenderer = (
+  renderer: DialogLitRenderer,
+  value?: unknown
+): DirectiveResult<typeof DialogRendererDirective> => rendererDirective(renderer, value);

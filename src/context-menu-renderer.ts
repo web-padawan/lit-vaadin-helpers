@@ -1,9 +1,12 @@
 import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
-import { directive, PartInfo, PartType } from 'lit/directive.js';
+import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
 import { ContextMenuElement, ContextMenuRendererContext } from '@vaadin/vaadin-context-menu';
-import { AbstractRendererDirective, Renderer } from './abstract-renderer.js';
+import { AbstractRendererDirective } from './abstract-renderer.js';
 
-export type ContextMenuLitRenderer = (context: ContextMenuRendererContext) => TemplateResult;
+export type ContextMenuLitRenderer = (
+  context: ContextMenuRendererContext,
+  menu: ContextMenuElement
+) => TemplateResult;
 
 class ContextMenuRendererDirective extends AbstractRendererDirective<ContextMenuElement> {
   constructor(part: PartInfo) {
@@ -29,17 +32,17 @@ class ContextMenuRendererDirective extends AbstractRendererDirective<ContextMenu
    */
   addRenderer(
     element: ContextMenuElement,
-    renderer: Renderer,
+    renderer: ContextMenuLitRenderer,
     value: unknown,
     options: RenderOptions
   ) {
     element.renderer = (
       root: HTMLElement,
-      _menu?: ContextMenuElement,
+      menu?: ContextMenuElement,
       context?: ContextMenuRendererContext
     ) => {
-      if (context) {
-        render(this.render(renderer, value)(context), root, options);
+      if (context && menu) {
+        render(this.render(renderer, value)(context, menu), root, options);
       }
     };
   }
@@ -52,4 +55,9 @@ class ContextMenuRendererDirective extends AbstractRendererDirective<ContextMenu
   }
 }
 
-export const contextMenuRenderer = directive(ContextMenuRendererDirective);
+const rendererDirective = directive(ContextMenuRendererDirective);
+
+export const contextMenuRenderer = (
+  renderer: ContextMenuLitRenderer,
+  value?: unknown
+): DirectiveResult<typeof ContextMenuRendererDirective> => rendererDirective(renderer, value);

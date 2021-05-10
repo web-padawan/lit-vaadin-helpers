@@ -1,14 +1,18 @@
 import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
 import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
 import { ComboBoxElement, ComboBoxItemModel } from '@vaadin/vaadin-combo-box';
-import { AbstractRendererDirective, Renderer } from './abstract-renderer.js';
+import { AbstractRendererDirective } from './abstract-renderer.js';
 
 export interface ComboBoxModel<T> {
   index: number;
   item: T;
 }
 
-export type ComboBoxLitRenderer<T> = (item: T, model: ComboBoxModel<T>) => TemplateResult;
+export type ComboBoxLitRenderer<T> = (
+  item: T,
+  model: ComboBoxModel<T>,
+  comboBox: ComboBoxElement
+) => TemplateResult;
 
 class ComboBoxRendererDirective extends AbstractRendererDirective<ComboBoxElement> {
   constructor(part: PartInfo) {
@@ -34,17 +38,13 @@ class ComboBoxRendererDirective extends AbstractRendererDirective<ComboBoxElemen
    */
   addRenderer<T>(
     element: ComboBoxElement,
-    renderer: Renderer,
+    renderer: ComboBoxLitRenderer<T>,
     value: unknown,
     options: RenderOptions
   ) {
-    element.renderer = (
-      root: HTMLElement,
-      _comboBox: ComboBoxElement,
-      model: ComboBoxItemModel
-    ) => {
+    element.renderer = (root: HTMLElement, comboBox: ComboBoxElement, model: ComboBoxItemModel) => {
       render(
-        this.render<T>(renderer, value)(model.item as T, model as ComboBoxModel<T>),
+        this.render<T>(renderer, value)(model.item as T, model as ComboBoxModel<T>, comboBox),
         root,
         options
       );

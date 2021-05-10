@@ -1,7 +1,6 @@
 import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
-import { directive, PartInfo, PartType } from 'lit/directive.js';
+import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
 import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column.js';
-import { Renderer } from './abstract-renderer.js';
 import { GridRendererDirective } from './grid-renderer-base.js';
 
 export type GridColumnHeaderLitRenderer = (column: GridColumnElement) => TemplateResult;
@@ -30,7 +29,7 @@ class GridColumnHeaderRendererDirective extends GridRendererDirective<GridColumn
    */
   addRenderer(
     element: GridColumnElement,
-    renderer: Renderer,
+    renderer: GridColumnHeaderLitRenderer,
     value: unknown,
     options: RenderOptions
   ) {
@@ -54,4 +53,9 @@ class GridColumnHeaderRendererDirective extends GridRendererDirective<GridColumn
   }
 }
 
-export const columnHeaderRenderer = directive(GridColumnHeaderRendererDirective);
+const rendererDirective = directive(GridColumnHeaderRendererDirective);
+
+export const columnHeaderRenderer = (
+  renderer: GridColumnHeaderLitRenderer,
+  value?: unknown
+): DirectiveResult<typeof GridColumnHeaderRendererDirective> => rendererDirective(renderer, value);

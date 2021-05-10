@@ -2,10 +2,13 @@ import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit
 import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
 import type { GridItemModel } from '@vaadin/vaadin-grid';
 import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column.js';
-import { Renderer } from './abstract-renderer.js';
 import { GridRendererDirective } from './grid-renderer-base.js';
 
-export type GridColumnBodyLitRenderer<T> = (item: T, model: GridItemModel<T>) => TemplateResult;
+export type GridColumnBodyLitRenderer<T> = (
+  item: T,
+  model: GridItemModel<T>,
+  column: GridColumnElement<T>
+) => TemplateResult;
 
 class GridColumnBodyRendererDirective extends GridRendererDirective<GridColumnElement> {
   constructor(part: PartInfo) {
@@ -31,18 +34,18 @@ class GridColumnBodyRendererDirective extends GridRendererDirective<GridColumnEl
    */
   addRenderer<T>(
     element: GridColumnElement,
-    renderer: Renderer,
+    renderer: GridColumnBodyLitRenderer<T>,
     value: unknown,
     options: RenderOptions
   ) {
     element.renderer = (
       root: HTMLElement,
-      _column?: GridColumnElement,
+      column?: GridColumnElement,
       model?: GridItemModel<T>
     ) => {
-      if (model) {
+      if (model && column) {
         const item = model.item;
-        render(this.render(renderer, value)(item, model), root, options);
+        render(this.render(renderer, value)(item, model, column), root, options);
       }
     };
   }
