@@ -15,6 +15,7 @@
     "build": "tsc",
     "dev": "npm run watch & npm run serve",
     "lint": "eslint src --ext .ts --ignore-path .gitignore",
+    "prepublishOnly": "npm run build",
     "serve": "web-dev-server --node-resolve --open --port 8081",
     "test": "wtr src/test/*.test.ts",
     "watch": "tsc-watch"
