@@ -13,7 +13,6 @@ class NotificationRendererDirective extends AbstractRendererDirective<Notificati
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   render(renderer: NotificationLitRenderer, _value?: unknown) {
     return renderer;
   }

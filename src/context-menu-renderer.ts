@@ -16,7 +16,6 @@ class ContextMenuRendererDirective extends AbstractRendererDirective<ContextMenu
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   render(renderer: ContextMenuLitRenderer, _value?: unknown) {
     return renderer;
   }

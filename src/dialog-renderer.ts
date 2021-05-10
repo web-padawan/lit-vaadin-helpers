@@ -13,7 +13,6 @@ class DialogRendererDirective extends AbstractRendererDirective<DialogElement> {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   render(renderer: DialogLitRenderer, _value?: unknown) {
     return renderer;
   }

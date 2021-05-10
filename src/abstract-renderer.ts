@@ -1,6 +1,7 @@
 import { nothing, RenderOptions, TemplateResult } from 'lit';
 import { Directive, ElementPart } from 'lit/directive.js';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AbstractLitRenderer = (...args: any[]) => TemplateResult;
 
 // A sentinel that indicates renderer hasn't been initialized

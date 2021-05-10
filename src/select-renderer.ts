@@ -13,7 +13,6 @@ class SelectRendererDirective extends AbstractRendererDirective<SelectElement> {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   render(renderer: SelectLitRenderer, _value?: unknown) {
     return renderer;
   }

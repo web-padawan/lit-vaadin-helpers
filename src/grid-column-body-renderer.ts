@@ -18,7 +18,6 @@ class GridColumnBodyRendererDirective extends GridRendererDirective<GridColumnEl
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   render<T>(renderer: GridColumnBodyLitRenderer<T>, _value?: unknown) {
     return renderer;
   }

@@ -13,7 +13,6 @@ class GridColumnFooterRendererDirective extends GridRendererDirective<GridColumn
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   render(renderer: GridColumnFooterLitRenderer, _value?: unknown) {
     return renderer;
   }

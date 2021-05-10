@@ -22,7 +22,6 @@ class ComboBoxRendererDirective extends AbstractRendererDirective<ComboBoxElemen
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   render<T>(renderer: ComboBoxLitRenderer<T>, _value?: unknown) {
     return renderer;
   }

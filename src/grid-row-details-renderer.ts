@@ -17,7 +17,6 @@ class GridRowDetailsRendererDirective extends GridRendererDirective<GridElement>
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   render<T>(renderer: GridRowDetailsLitRenderer<T>, _value?: unknown) {
     return renderer;
   }
