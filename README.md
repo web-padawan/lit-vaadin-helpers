@@ -8,6 +8,8 @@ Helpers for using [Vaadin web components](https://github.com/vaadin/web-componen
 npm install lit-vaadin-helpers
 ```
 
+Note: this library is compatible Vaadin components [21.0.0-alpha1](https://github.com/vaadin/web-components/releases/tag/v21.0.0-alpha1) and above.
+
 ## Usage
 
 ```js
