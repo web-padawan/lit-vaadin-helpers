@@ -1,4 +1,4 @@
-import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column.js';
+import { GridColumnElement } from '@vaadin/vaadin-grid';
 import { AbstractRendererDirective, AbstractLitRenderer } from './abstract-renderer.js';
 import { debounce } from './utils.js';
 

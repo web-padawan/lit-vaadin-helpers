@@ -2,6 +2,7 @@ import { expect } from '@esm-bundle/chai';
 import sinon from 'sinon';
 import { fixture } from '@open-wc/testing-helpers';
 import { LitElement, html, TemplateResult } from 'lit';
+import { PolymerElement } from '@polymer/polymer';
 import { property, query } from 'lit/decorators.js';
 import '@vaadin/vaadin-grid';
 import '@vaadin/vaadin-grid/vaadin-grid-column-group';
@@ -123,7 +124,7 @@ const getContainerCell = (container: Element, row: number, col: number) => {
 };
 
 const getBodyCellContent = (grid: GridElement, row: number, col: number) => {
-  const container = grid.$.items;
+  const container = (grid as unknown as PolymerElement).$.items;
   return getContainerCellContent(container, row, col) as HTMLElement;
 };
 

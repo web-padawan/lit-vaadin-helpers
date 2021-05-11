@@ -1,6 +1,6 @@
 import { render, RenderOptions, TemplateResult } from 'lit';
 import { directive, DirectiveResult } from 'lit/directive.js';
-import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column.js';
+import { GridColumnElement } from '@vaadin/vaadin-grid';
 import { AbstractGridColumnRenderer } from './abstract-grid-column-renderer.js';
 
 export type GridColumnFooterLitRenderer = (column: GridColumnElement) => TemplateResult;
