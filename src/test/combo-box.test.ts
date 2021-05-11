@@ -74,8 +74,8 @@ describe('vaadin-combo-box renderer', () => {
     comboBox = wrapper.renderRoot.querySelector('vaadin-combo-box') as ComboBoxElement;
     comboBox.opened = true;
     await nextFrame();
-    const dropdown = (((comboBox as unknown) as PolymerElement).$.overlay as PolymerElement).$
-      .dropdown as PolymerElement;
+    const inner = comboBox.shadowRoot?.querySelector('#overlay') as PolymerElement;
+    const dropdown = inner.$.dropdown as PolymerElement;
     const overlay = dropdown.$.overlay as OverlayElement;
     content = overlay.content as HTMLElement;
     item = content.querySelector('vaadin-combo-box-item') as PolymerElement;

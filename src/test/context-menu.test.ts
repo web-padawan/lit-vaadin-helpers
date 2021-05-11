@@ -3,7 +3,6 @@ import sinon from 'sinon';
 import { fixture, nextFrame } from '@open-wc/testing-helpers';
 import { LitElement, html, TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
-import { PolymerElement } from '@polymer/polymer';
 import '@vaadin/vaadin-context-menu/vaadin-context-menu.js';
 import '@vaadin/vaadin-list-box/vaadin-list-box.js';
 import '@vaadin/vaadin-item/vaadin-item.js';
@@ -60,7 +59,7 @@ describe('vaadin-context-menu renderer', () => {
   beforeEach(async () => {
     wrapper = await fixture(`<action-selector></action-selector>`);
     menu = wrapper.renderRoot.querySelector('vaadin-context-menu') as ContextMenuElement;
-    overlay = ((menu as unknown) as PolymerElement).$.overlay as OverlayElement;
+    overlay = menu.shadowRoot?.querySelector('#overlay') as OverlayElement;
     target = wrapper.renderRoot.querySelector('div') as HTMLElement;
     target.click();
     await nextFrame();
