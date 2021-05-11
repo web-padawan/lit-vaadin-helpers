@@ -1,5 +1,5 @@
 import { nothing, RenderOptions, TemplateResult } from 'lit';
-import { Directive, ElementPart } from 'lit/directive.js';
+import { Directive, ElementPart, PartInfo, PartType } from 'lit/directive.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AbstractLitRenderer = (...args: any[]) => TemplateResult;
@@ -7,10 +7,24 @@ export type AbstractLitRenderer = (...args: any[]) => TemplateResult;
 // A sentinel that indicates renderer hasn't been initialized
 const initialValue = {};
 
-export abstract class AbstractRendererDirective<T extends Element> extends Directive {
+export abstract class AbstractRendererDirective<
+  T extends Element,
+  R extends AbstractLitRenderer
+> extends Directive {
   previousValue: unknown = initialValue;
 
-  update(part: ElementPart, [renderer, value]: [AbstractLitRenderer, unknown]): unknown {
+  constructor(part: PartInfo) {
+    super(part);
+    if (part.type !== PartType.ELEMENT) {
+      throw new Error('renderer only supports binding to element');
+    }
+  }
+
+  render(_renderer: R, _value?: unknown): typeof nothing {
+    return nothing;
+  }
+
+  update(part: ElementPart, [renderer, value]: [R, unknown]): unknown {
     const firstRender = this.previousValue === initialValue;
 
     if (!this.hasChanged(value)) {
@@ -26,7 +40,7 @@ export abstract class AbstractRendererDirective<T extends Element> extends Direc
     // TODO: support re-assigning renderer function.
     if (firstRender) {
       const host = part.options?.host;
-      this.addRenderer(element, renderer, value, { host });
+      this.addRenderer(element, renderer, { host });
     } else {
       this.runRenderer(element);
     }
@@ -56,12 +70,7 @@ export abstract class AbstractRendererDirective<T extends Element> extends Direc
   /**
    * Set renderer callback to the element.
    */
-  abstract addRenderer(
-    element: T,
-    renderer: AbstractLitRenderer,
-    value: unknown,
-    options: RenderOptions
-  ): void;
+  abstract addRenderer(element: T, renderer: R, options: RenderOptions): void;
 
   /**
    * Run renderer callback on the element.

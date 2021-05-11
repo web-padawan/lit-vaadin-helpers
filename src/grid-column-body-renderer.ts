@@ -1,5 +1,5 @@
-import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
-import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
+import { render, RenderOptions, TemplateResult } from 'lit';
+import { directive, DirectiveResult } from 'lit/directive.js';
 import type { GridItemModel } from '@vaadin/vaadin-grid';
 import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column.js';
 import { GridRendererDirective } from './grid-renderer-base.js';
@@ -10,31 +10,16 @@ export type GridColumnBodyLitRenderer<T> = (
   column: GridColumnElement<T>
 ) => TemplateResult;
 
-class GridColumnBodyRendererDirective extends GridRendererDirective<GridColumnElement> {
-  constructor(part: PartInfo) {
-    super(part);
-    if (part.type !== PartType.ELEMENT) {
-      throw new Error('Only supports binding to element');
-    }
-  }
-
-  render<T>(renderer: GridColumnBodyLitRenderer<T>, _value?: unknown) {
-    return renderer;
-  }
-
-  update<T>(part: ElementPart, [renderer, value]: [GridColumnBodyLitRenderer<T>, unknown]) {
-    super.update(part, [renderer, value]);
-
-    return nothing;
-  }
-
+class GridColumnBodyRendererDirective extends GridRendererDirective<
+  GridColumnElement,
+  GridColumnBodyLitRenderer<unknown>
+> {
   /**
    * Set renderer callback to the element.
    */
   addRenderer<T>(
     element: GridColumnElement,
     renderer: GridColumnBodyLitRenderer<T>,
-    value: unknown,
     options: RenderOptions
   ) {
     element.renderer = (
@@ -42,9 +27,13 @@ class GridColumnBodyRendererDirective extends GridRendererDirective<GridColumnEl
       column?: GridColumnElement,
       model?: GridItemModel<T>
     ) => {
-      if (model && column) {
+      if (model) {
         const item = model.item;
-        render(this.render(renderer, value).call(options.host, item, model, column), root, options);
+        render(
+          renderer.call(options.host, item, model, column as GridColumnElement),
+          root,
+          options
+        );
       }
     };
   }

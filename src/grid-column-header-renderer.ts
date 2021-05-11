@@ -1,43 +1,24 @@
-import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
-import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
+import { render, RenderOptions, TemplateResult } from 'lit';
+import { directive, DirectiveResult } from 'lit/directive.js';
 import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column.js';
 import { GridRendererDirective } from './grid-renderer-base.js';
 
 export type GridColumnHeaderLitRenderer = (column: GridColumnElement) => TemplateResult;
 
-class GridColumnHeaderRendererDirective extends GridRendererDirective<GridColumnElement> {
-  constructor(part: PartInfo) {
-    super(part);
-    if (part.type !== PartType.ELEMENT) {
-      throw new Error('Only supports binding to element');
-    }
-  }
-
-  render(renderer: GridColumnHeaderLitRenderer, _value?: unknown) {
-    return renderer;
-  }
-
-  update(part: ElementPart, [renderer, value]: [GridColumnHeaderLitRenderer, unknown]) {
-    super.update(part, [renderer, value]);
-
-    return nothing;
-  }
-
+class GridColumnHeaderRendererDirective extends GridRendererDirective<
+  GridColumnElement,
+  GridColumnHeaderLitRenderer
+> {
   /**
    * Set renderer callback to the element.
    */
   addRenderer(
     element: GridColumnElement,
     renderer: GridColumnHeaderLitRenderer,
-    value: unknown,
     options: RenderOptions
   ) {
     element.headerRenderer = (root: HTMLElement, column?: GridColumnElement) => {
-      render(
-        this.render(renderer, value).call(options.host, column as GridColumnElement),
-        root,
-        options
-      );
+      render(renderer.call(options.host, column as GridColumnElement), root, options);
     };
   }
 

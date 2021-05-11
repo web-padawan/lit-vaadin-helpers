@@ -1,41 +1,24 @@
-import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
-import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
+import { render, RenderOptions, TemplateResult } from 'lit';
+import { directive, DirectiveResult } from 'lit/directive.js';
 import { NotificationElement } from '@vaadin/vaadin-notification';
 import { AbstractRendererDirective } from './abstract-renderer.js';
 
 export type NotificationLitRenderer = (notification: NotificationElement) => TemplateResult;
 
-class NotificationRendererDirective extends AbstractRendererDirective<NotificationElement> {
-  constructor(part: PartInfo) {
-    super(part);
-    if (part.type !== PartType.ELEMENT) {
-      throw new Error('Only supports binding to element');
-    }
-  }
-
-  render(renderer: NotificationLitRenderer, _value?: unknown) {
-    return renderer;
-  }
-
-  update(part: ElementPart, [renderer, value]: [NotificationLitRenderer, unknown]) {
-    super.update(part, [renderer, value]);
-
-    return nothing;
-  }
-
+class NotificationRendererDirective extends AbstractRendererDirective<
+  NotificationElement,
+  NotificationLitRenderer
+> {
   /**
    * Set renderer callback to the element.
    */
   addRenderer(
     element: NotificationElement,
     renderer: NotificationLitRenderer,
-    value: unknown,
     options: RenderOptions
   ) {
     element.renderer = (root: HTMLElement, notification?: NotificationElement) => {
-      if (notification) {
-        render(this.render(renderer, value).call(options.host, notification), root, options);
-      }
+      render(renderer.call(options.host, notification as NotificationElement), root, options);
     };
   }
 

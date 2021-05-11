@@ -1,5 +1,5 @@
-import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
-import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
+import { render, RenderOptions, TemplateResult } from 'lit';
+import { directive, DirectiveResult } from 'lit/directive.js';
 import { ComboBoxElement, ComboBoxItemModel } from '@vaadin/vaadin-combo-box';
 import { AbstractRendererDirective } from './abstract-renderer.js';
 
@@ -14,41 +14,21 @@ export type ComboBoxLitRenderer<T> = (
   comboBox: ComboBoxElement
 ) => TemplateResult;
 
-class ComboBoxRendererDirective extends AbstractRendererDirective<ComboBoxElement> {
-  constructor(part: PartInfo) {
-    super(part);
-    if (part.type !== PartType.ELEMENT) {
-      throw new Error('Only supports binding to element');
-    }
-  }
-
-  render<T>(renderer: ComboBoxLitRenderer<T>, _value?: unknown) {
-    return renderer;
-  }
-
-  update<T>(part: ElementPart, [renderer, value]: [ComboBoxLitRenderer<T>, unknown]) {
-    super.update(part, [renderer, value]);
-
-    return nothing;
-  }
-
+class ComboBoxRendererDirective extends AbstractRendererDirective<
+  ComboBoxElement,
+  ComboBoxLitRenderer<unknown>
+> {
   /**
    * Set renderer callback to the element.
    */
   addRenderer<T>(
     element: ComboBoxElement,
     renderer: ComboBoxLitRenderer<T>,
-    value: unknown,
     options: RenderOptions
   ) {
     element.renderer = (root: HTMLElement, comboBox: ComboBoxElement, model: ComboBoxItemModel) => {
       render(
-        this.render<T>(renderer, value).call(
-          options.host,
-          model.item as T,
-          model as ComboBoxModel<T>,
-          comboBox
-        ),
+        renderer.call(options.host, model.item as T, model as ComboBoxModel<T>, comboBox),
         root,
         options
       );

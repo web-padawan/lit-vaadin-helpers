@@ -1,41 +1,17 @@
-import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
-import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
+import { render, RenderOptions, TemplateResult } from 'lit';
+import { directive, DirectiveResult } from 'lit/directive.js';
 import { SelectElement } from '@vaadin/vaadin-select';
 import { AbstractRendererDirective } from './abstract-renderer.js';
 
 export type SelectLitRenderer = (select: SelectElement) => TemplateResult;
 
-class SelectRendererDirective extends AbstractRendererDirective<SelectElement> {
-  constructor(part: PartInfo) {
-    super(part);
-    if (part.type !== PartType.ELEMENT) {
-      throw new Error('Only supports binding to element');
-    }
-  }
-
-  render(renderer: SelectLitRenderer, _value?: unknown) {
-    return renderer;
-  }
-
-  update(part: ElementPart, [renderer, value]: [SelectLitRenderer, unknown]) {
-    super.update(part, [renderer, value]);
-
-    return nothing;
-  }
-
+class SelectRendererDirective extends AbstractRendererDirective<SelectElement, SelectLitRenderer> {
   /**
    * Set renderer callback to the element.
    */
-  addRenderer(
-    element: SelectElement,
-    renderer: SelectLitRenderer,
-    value: unknown,
-    options: RenderOptions
-  ) {
+  addRenderer(element: SelectElement, renderer: SelectLitRenderer, options: RenderOptions) {
     element.renderer = (root: HTMLElement, select?: SelectElement) => {
-      if (select) {
-        render(this.render(renderer, value).call(options.host, select), root, options);
-      }
+      render(renderer.call(options.host, select as SelectElement), root, options);
     };
   }
 

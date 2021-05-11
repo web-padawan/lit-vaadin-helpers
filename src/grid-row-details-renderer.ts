@@ -1,5 +1,5 @@
-import { nothing, ElementPart, render, RenderOptions, TemplateResult } from 'lit';
-import { directive, DirectiveResult, PartInfo, PartType } from 'lit/directive.js';
+import { render, RenderOptions, TemplateResult } from 'lit';
+import { directive, DirectiveResult } from 'lit/directive.js';
 import { GridElement, GridItemModel } from '@vaadin/vaadin-grid';
 import { GridRendererDirective } from './grid-renderer-base.js';
 
@@ -9,31 +9,16 @@ export type GridRowDetailsLitRenderer<T> = (
   grid: GridElement
 ) => TemplateResult;
 
-class GridRowDetailsRendererDirective extends GridRendererDirective<GridElement> {
-  constructor(part: PartInfo) {
-    super(part);
-    if (part.type !== PartType.ELEMENT) {
-      throw new Error('Only supports binding to element');
-    }
-  }
-
-  render<T>(renderer: GridRowDetailsLitRenderer<T>, _value?: unknown) {
-    return renderer;
-  }
-
-  update<T>(part: ElementPart, [renderer, value]: [GridRowDetailsLitRenderer<T>, unknown]) {
-    super.update(part, [renderer, value]);
-
-    return nothing;
-  }
-
+class GridRowDetailsRendererDirective extends GridRendererDirective<
+  GridElement,
+  GridRowDetailsLitRenderer<unknown>
+> {
   /**
    * Set renderer callback to the element.
    */
   addRenderer<T>(
     element: GridElement,
     renderer: GridRowDetailsLitRenderer<T>,
-    value: unknown,
     options: RenderOptions
   ) {
     element.rowDetailsRenderer = (
@@ -41,9 +26,9 @@ class GridRowDetailsRendererDirective extends GridRendererDirective<GridElement>
       grid?: GridElement,
       model?: GridItemModel<T>
     ) => {
-      if (model && grid) {
+      if (model) {
         const item = model.item;
-        render(this.render(renderer, value).call(options.host, item, model, grid), root, options);
+        render(renderer.call(options.host, item, model, grid as GridElement), root, options);
       }
     };
   }
