@@ -2,7 +2,7 @@ import { render, RenderOptions, TemplateResult } from 'lit';
 import { directive, DirectiveResult } from 'lit/directive.js';
 import type { GridItemModel } from '@vaadin/vaadin-grid';
 import { GridColumnElement } from '@vaadin/vaadin-grid/vaadin-grid-column.js';
-import { GridRendererDirective } from './grid-renderer-base.js';
+import { AbstractGridColumnRenderer } from './abstract-grid-column-renderer.js';
 
 export type GridColumnBodyLitRenderer<T> = (
   item: T,
@@ -10,7 +10,7 @@ export type GridColumnBodyLitRenderer<T> = (
   column: GridColumnElement<T>
 ) => TemplateResult;
 
-class GridColumnBodyRendererDirective extends GridRendererDirective<
+class GridColumnBodyRendererDirective extends AbstractGridColumnRenderer<
   GridColumnElement,
   GridColumnBodyLitRenderer<unknown>
 > {
@@ -36,20 +36,6 @@ class GridColumnBodyRendererDirective extends GridRendererDirective<
         );
       }
     };
-  }
-
-  /**
-   * Run renderer callback on the element.
-   */
-  runRenderer(element: GridColumnElement) {
-    const grid = element._grid;
-    if (grid) {
-      // Only call grid.render() once when if the property is changed,
-      // in case if that property is used by several column renderers.
-      this.debounce(grid, () => {
-        grid.render();
-      });
-    }
   }
 }
 

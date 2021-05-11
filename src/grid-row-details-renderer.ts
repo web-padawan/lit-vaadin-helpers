@@ -1,7 +1,8 @@
 import { render, RenderOptions, TemplateResult } from 'lit';
 import { directive, DirectiveResult } from 'lit/directive.js';
 import { GridElement, GridItemModel } from '@vaadin/vaadin-grid';
-import { GridRendererDirective } from './grid-renderer-base.js';
+import { AbstractRendererDirective } from './abstract-renderer.js';
+import { debounce } from './utils.js';
 
 export type GridRowDetailsLitRenderer<T> = (
   item: T,
@@ -9,7 +10,7 @@ export type GridRowDetailsLitRenderer<T> = (
   grid: GridElement
 ) => TemplateResult;
 
-class GridRowDetailsRendererDirective extends GridRendererDirective<
+class GridRowDetailsRendererDirective extends AbstractRendererDirective<
   GridElement,
   GridRowDetailsLitRenderer<unknown>
 > {
@@ -39,7 +40,7 @@ class GridRowDetailsRendererDirective extends GridRendererDirective<
   runRenderer(element: GridElement) {
     // Only call grid.render() once when if the property is changed,
     // in case if that property is used by several column renderers.
-    this.debounce(element, () => {
+    debounce(element, () => {
       element.render();
     });
   }
