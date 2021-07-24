@@ -27,9 +27,8 @@ class GridColumnBodyRendererDirective extends AbstractGridColumnRenderer<
       model?: GridItemModel<T>
     ) => {
       if (model) {
-        const item = model.item;
         render(
-          renderer.call(options.host, item, model, column as GridColumnElement),
+          renderer.call(options.host, model.item, model, column as GridColumnElement),
           root,
           options
         );

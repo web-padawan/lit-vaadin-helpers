@@ -19,7 +19,7 @@ class DialogRendererDirective extends AbstractRendererDirective<DialogElement, D
    * Run renderer callback on the element.
    */
   runRenderer(element: DialogElement) {
-    element.render();
+    element.requestContentUpdate();
   }
 }
 

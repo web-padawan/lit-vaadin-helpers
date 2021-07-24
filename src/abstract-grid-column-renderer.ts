@@ -12,10 +12,10 @@ export abstract class AbstractGridColumnRenderer<
   runRenderer(element: GridColumnElement): void {
     const grid = element._grid;
     if (grid) {
-      // Only call grid.render() once when if the property is changed,
+      // Only call grid.requestContentUpdate() once per property change
       // in case if that property is used by several column renderers.
       debounce(grid, () => {
-        grid.render();
+        grid.requestContentUpdate();
       });
     }
   }

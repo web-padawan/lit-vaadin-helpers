@@ -26,7 +26,7 @@ class NotificationRendererDirective extends AbstractRendererDirective<
    * Run renderer callback on the element.
    */
   runRenderer(element: NotificationElement) {
-    element.render();
+    element.requestContentUpdate();
   }
 }
 

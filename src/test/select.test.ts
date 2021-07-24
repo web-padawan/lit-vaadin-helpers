@@ -65,7 +65,7 @@ describe('vaadin-select renderer', () => {
   });
 
   it('should render items when passed array is updated', async () => {
-    const spy = sinon.spy(select, 'render');
+    const spy = sinon.spy(select, 'requestContentUpdate');
     wrapper.statuses = [...wrapper.statuses, { name: 'new' }];
     await wrapper.updateComplete;
     expect(spy.callCount).to.equal(1);
@@ -73,7 +73,7 @@ describe('vaadin-select renderer', () => {
   });
 
   it('should remove items when passed array is cleared', async () => {
-    const spy = sinon.spy(select, 'render');
+    const spy = sinon.spy(select, 'requestContentUpdate');
     wrapper.statuses = [];
     await wrapper.updateComplete;
     expect(spy.callCount).to.equal(1);
@@ -81,7 +81,7 @@ describe('vaadin-select renderer', () => {
   });
 
   it('should not re-render on unrelated property change', async () => {
-    const spy = sinon.spy(select, 'render');
+    const spy = sinon.spy(select, 'requestContentUpdate');
     wrapper.label = 'New label';
     await wrapper.updateComplete;
     expect(spy.callCount).to.equal(0);

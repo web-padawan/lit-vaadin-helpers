@@ -88,7 +88,7 @@ describe('vaadin-context-menu renderer', () => {
   });
 
   it('should render items when passed array is updated', async () => {
-    const spy = sinon.spy(menu, 'render');
+    const spy = sinon.spy(menu, 'requestContentUpdate');
     wrapper.actions = [...wrapper.actions, 'Copy'];
     await wrapper.updateComplete;
     expect(spy.callCount).to.equal(1);
@@ -96,7 +96,7 @@ describe('vaadin-context-menu renderer', () => {
   });
 
   it('should remove items when passed array is cleared', async () => {
-    const spy = sinon.spy(menu, 'render');
+    const spy = sinon.spy(menu, 'requestContentUpdate');
     wrapper.actions = [];
     await wrapper.updateComplete;
     expect(spy.callCount).to.equal(1);
@@ -104,7 +104,7 @@ describe('vaadin-context-menu renderer', () => {
   });
 
   it('should not re-render on unrelated property change', async () => {
-    const spy = sinon.spy(menu, 'render');
+    const spy = sinon.spy(menu, 'requestContentUpdate');
     wrapper.openOn = 'keydown';
     await wrapper.updateComplete;
     expect(spy.callCount).to.equal(0);

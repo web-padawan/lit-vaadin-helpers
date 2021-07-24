@@ -41,7 +41,7 @@ class ContextMenuRendererDirective extends AbstractRendererDirective<
    * Run renderer callback on the element.
    */
   runRenderer(element: ContextMenuElement) {
-    element.render();
+    element.requestContentUpdate();
   }
 }
 

@@ -19,7 +19,7 @@ class SelectRendererDirective extends AbstractRendererDirective<SelectElement, S
    * Run renderer callback on the element.
    */
   runRenderer(element: SelectElement) {
-    element.render();
+    element.requestContentUpdate();
   }
 }
 

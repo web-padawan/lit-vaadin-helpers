@@ -38,10 +38,10 @@ class GridRowDetailsRendererDirective extends AbstractRendererDirective<
    * Run renderer callback on the element.
    */
   runRenderer(element: GridElement) {
-    // Only call grid.render() once when if the property is changed,
+    // Only call grid.requestContentUpdate() once per property change
     // in case if that property is used by several column renderers.
     debounce(element, () => {
-      element.render();
+      element.requestContentUpdate();
     });
   }
 }

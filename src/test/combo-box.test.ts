@@ -91,7 +91,7 @@ describe('vaadin-combo-box renderer', () => {
   });
 
   it('should render items when passed property is updated', async () => {
-    const spy = sinon.spy(comboBox, 'render');
+    const spy = sinon.spy(comboBox, 'requestContentUpdate');
     wrapper.separator = '_';
     await wrapper.updateComplete;
     expect(spy.callCount).to.equal(1);
@@ -99,7 +99,7 @@ describe('vaadin-combo-box renderer', () => {
   });
 
   it('should not re-render on unrelated property change', async () => {
-    const spy = sinon.spy(comboBox, 'render');
+    const spy = sinon.spy(comboBox, 'requestContentUpdate');
     wrapper.label = 'New label';
     await wrapper.updateComplete;
     expect(spy.callCount).to.equal(0);

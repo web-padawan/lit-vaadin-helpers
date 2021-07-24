@@ -155,14 +155,14 @@ describe('vaadin-grid renderer', () => {
   });
 
   it('should call render once when passed property is changed', async () => {
-    const spy = sinon.spy(grid, 'render');
+    const spy = sinon.spy(grid, 'requestContentUpdate');
     wrapper.filter = 'r';
     await wrapper.updateComplete;
     expect(spy.callCount).to.equal(1);
   });
 
   it('should not re-render on unrelated property change', async () => {
-    const spy = sinon.spy(grid, 'render');
+    const spy = sinon.spy(grid, 'requestContentUpdate');
     wrapper.detailsOpened = [wrapper.users[0]];
     await wrapper.updateComplete;
     expect(spy.callCount).to.equal(0);
