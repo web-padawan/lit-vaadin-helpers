@@ -1,6 +1,6 @@
 {
   "name": "lit-vaadin-helpers",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Helpers for using Vaadin web components with Lit 2",
   "author": "Serhii Kulykov <iamkulykov@gmail.com>",
   "license": "MIT",
