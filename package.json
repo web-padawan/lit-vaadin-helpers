@@ -21,7 +21,7 @@
     "watch": "tsc-watch"
   },
   "dependencies": {
-    "lit": "^2.0.0-rc.1"
+    "lit": "^2.0.0"
   },
   "devDependencies": {
     "@esm-bundle/chai": "^4.3.4",
