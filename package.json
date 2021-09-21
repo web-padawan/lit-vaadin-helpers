@@ -45,17 +45,15 @@
     "eslint": "^7.26.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
-    "husky": "^4.3.6",
     "lint-staged": "^11.0.0",
     "prettier": "^2.3.0",
+    "simple-git-hooks": "^2.5.1",
     "sinon": "^10.0.0",
     "tsc-watch": "^4.2.9",
     "typescript": "^4.2.4"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
   },
   "lint-staged": {
     "*.ts": [
