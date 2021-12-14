@@ -16,9 +16,9 @@ If you are using Vaadin components 21.0.x, please use `0.2.2` version.
 
 ```js
 import { html, LitElement } from 'lit';
-import '@vaadin/vaadin-select';
-import '@vaadin/vaadin-list-box';
-import '@vaadin/vaadin-item';
+import '@vaadin/item';
+import '@vaadin/list-box';
+import '@vaadin/select';
 import { selectRenderer } from 'lit-vaadin-helpers';
 
 class DialogDemo extends LitElement {
