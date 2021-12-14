@@ -3,12 +3,12 @@ import sinon from 'sinon';
 import { fixture, nextFrame } from '@open-wc/testing-helpers';
 import { LitElement, html, TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
-import '@vaadin/vaadin-context-menu/vaadin-context-menu.js';
-import '@vaadin/vaadin-list-box/vaadin-list-box.js';
-import '@vaadin/vaadin-item/vaadin-item.js';
-import type { ContextMenuElement, ContextMenuRendererContext } from '@vaadin/vaadin-context-menu';
+import '@vaadin/context-menu';
+import '@vaadin/item';
+import '@vaadin/list-box';
+import type { ContextMenu, ContextMenuRendererContext } from '@vaadin/context-menu';
+import type { Item } from '@vaadin/item';
 import type { OverlayElement } from '@vaadin/vaadin-overlay';
-import type { ItemElement } from '@vaadin/vaadin-item/vaadin-item.js';
 import { contextMenuRenderer } from '../index.js';
 
 class ActionSelector extends LitElement {
@@ -51,14 +51,14 @@ customElements.define('action-selector', ActionSelector);
 
 describe('vaadin-context-menu renderer', () => {
   let wrapper: ActionSelector;
-  let menu: ContextMenuElement;
+  let menu: ContextMenu;
   let overlay: OverlayElement;
   let target: HTMLElement;
-  let item: ItemElement;
+  let item: Item;
 
   beforeEach(async () => {
     wrapper = await fixture(`<action-selector></action-selector>`);
-    menu = wrapper.renderRoot.querySelector('vaadin-context-menu') as ContextMenuElement;
+    menu = wrapper.renderRoot.querySelector('vaadin-context-menu') as ContextMenu;
     overlay = menu.shadowRoot?.querySelector('#overlay') as OverlayElement;
     target = wrapper.renderRoot.querySelector('div') as HTMLElement;
     target.click();
@@ -76,14 +76,14 @@ describe('vaadin-context-menu renderer', () => {
   });
 
   it('should re-render items when target element is changed', async () => {
-    item = overlay.querySelector('vaadin-item') as ItemElement;
+    item = overlay.querySelector('vaadin-item') as Item;
     expect(item.value).to.equal('Edit 1');
     menu.close();
     await nextFrame();
     const second = target.nextElementSibling as HTMLElement;
     second.click();
     await nextFrame();
-    item = overlay.querySelector('vaadin-item') as ItemElement;
+    item = overlay.querySelector('vaadin-item') as Item;
     expect(item.value).to.equal('Edit 2');
   });
 
@@ -113,7 +113,7 @@ describe('vaadin-context-menu renderer', () => {
   it('should support using host methods as event listeners', () => {
     const spy = sinon.spy();
     wrapper.addEventListener('item-click', spy);
-    item = overlay.querySelector('vaadin-item') as ItemElement;
+    item = overlay.querySelector('vaadin-item') as Item;
     item.click();
     expect(spy.callCount).to.equal(1);
     expect(spy.firstCall.args[0].detail.item).to.deep.equal(item);

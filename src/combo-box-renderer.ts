@@ -1,31 +1,23 @@
 import { render, RenderOptions, TemplateResult } from 'lit';
 import { directive, DirectiveResult } from 'lit/directive.js';
-import { ComboBoxElement, ComboBoxItemModel } from '@vaadin/vaadin-combo-box';
+import { ComboBox, ComboBoxItemModel } from '@vaadin/combo-box';
 import { AbstractRendererDirective } from './abstract-renderer.js';
 
 export type ComboBoxLitRenderer<T> = (
   item: T,
   model: ComboBoxItemModel<T>,
-  comboBox: ComboBoxElement
+  comboBox: ComboBox
 ) => TemplateResult;
 
 class ComboBoxRendererDirective extends AbstractRendererDirective<
-  ComboBoxElement,
+  ComboBox,
   ComboBoxLitRenderer<unknown>
 > {
   /**
    * Set renderer callback to the element.
    */
-  addRenderer<T>(
-    element: ComboBoxElement,
-    renderer: ComboBoxLitRenderer<T>,
-    options: RenderOptions
-  ) {
-    element.renderer = (
-      root: HTMLElement,
-      comboBox: ComboBoxElement,
-      model: ComboBoxItemModel<T>
-    ) => {
+  addRenderer<T>(element: ComboBox, renderer: ComboBoxLitRenderer<T>, options: RenderOptions) {
+    element.renderer = (root: HTMLElement, comboBox: ComboBox, model: ComboBoxItemModel<T>) => {
       render(renderer.call(options.host, model.item, model, comboBox), root, options);
     };
   }
@@ -33,7 +25,7 @@ class ComboBoxRendererDirective extends AbstractRendererDirective<
   /**
    * Run renderer callback on the element.
    */
-  runRenderer(element: ComboBoxElement) {
+  runRenderer(element: ComboBox) {
     element.requestContentUpdate();
   }
 }

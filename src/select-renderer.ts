@@ -1,24 +1,24 @@
 import { render, RenderOptions, TemplateResult } from 'lit';
 import { directive, DirectiveResult } from 'lit/directive.js';
-import { SelectElement } from '@vaadin/vaadin-select';
+import { Select } from '@vaadin/select';
 import { AbstractRendererDirective } from './abstract-renderer.js';
 
-export type SelectLitRenderer = (select: SelectElement) => TemplateResult;
+export type SelectLitRenderer = (select: Select) => TemplateResult;
 
-class SelectRendererDirective extends AbstractRendererDirective<SelectElement, SelectLitRenderer> {
+class SelectRendererDirective extends AbstractRendererDirective<Select, SelectLitRenderer> {
   /**
    * Set renderer callback to the element.
    */
-  addRenderer(element: SelectElement, renderer: SelectLitRenderer, options: RenderOptions) {
-    element.renderer = (root: HTMLElement, select?: SelectElement) => {
-      render(renderer.call(options.host, select as SelectElement), root, options);
+  addRenderer(element: Select, renderer: SelectLitRenderer, options: RenderOptions) {
+    element.renderer = (root: HTMLElement, select?: Select) => {
+      render(renderer.call(options.host, select as Select), root, options);
     };
   }
 
   /**
    * Run renderer callback on the element.
    */
-  runRenderer(element: SelectElement) {
+  runRenderer(element: Select) {
     element.requestContentUpdate();
   }
 }

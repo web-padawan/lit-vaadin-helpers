@@ -4,11 +4,11 @@ import { fixture } from '@open-wc/testing-helpers';
 import { LitElement, html, TemplateResult } from 'lit';
 import { PolymerElement } from '@polymer/polymer';
 import { property, query } from 'lit/decorators.js';
-import '@vaadin/vaadin-grid';
-import '@vaadin/vaadin-grid/vaadin-grid-column-group';
-import '@vaadin/vaadin-checkbox';
-import type { CheckboxElement } from '@vaadin/vaadin-checkbox';
-import type { GridElement, GridEventContext } from '@vaadin/vaadin-grid';
+import '@vaadin/checkbox';
+import '@vaadin/grid';
+import '@vaadin/grid/vaadin-grid-column-group.js';
+import type { Checkbox } from '@vaadin/checkbox';
+import type { Grid, GridEventContext } from '@vaadin/grid';
 import { columnBodyRenderer, columnHeaderRenderer, gridRowDetailsRenderer } from '../index.js';
 
 interface User {
@@ -38,7 +38,7 @@ class UserInfo extends LitElement {
 
   @property({ type: String }) label = 'Filter';
 
-  @query('vaadin-grid') grid!: GridElement<User>;
+  @query('vaadin-grid') grid!: Grid<User>;
 
   render(): TemplateResult {
     return html`
@@ -82,7 +82,7 @@ class UserInfo extends LitElement {
   }
 
   toggleDetails(event: CustomEvent) {
-    const target = event.target as CheckboxElement;
+    const target = event.target as Checkbox;
     const context = this.grid.getEventContext(event) as GridEventContext<User>;
     const user = context.item;
     if (user) {
@@ -123,7 +123,7 @@ const getContainerCell = (container: Element, row: number, col: number) => {
   return cells[col];
 };
 
-const getBodyCellContent = (grid: GridElement, row: number, col: number) => {
+const getBodyCellContent = (grid: Grid, row: number, col: number) => {
   const container = (grid as unknown as PolymerElement).$.items;
   return getContainerCellContent(container, row, col) as HTMLElement;
 };
@@ -135,11 +135,11 @@ const strip = (str: string): string => {
 
 describe('vaadin-grid renderer', () => {
   let wrapper: UserInfo;
-  let grid: GridElement;
+  let grid: Grid;
 
   beforeEach(async () => {
     wrapper = await fixture(`<user-info></user-info>`);
-    grid = wrapper.renderRoot.querySelector('vaadin-grid') as GridElement;
+    grid = wrapper.renderRoot.querySelector('vaadin-grid') as Grid;
   });
 
   it('should have valid content when renderer is set', () => {

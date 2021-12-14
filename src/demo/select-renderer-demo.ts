@@ -1,8 +1,8 @@
 import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import '@vaadin/vaadin-select';
-import '@vaadin/vaadin-list-box';
-import '@vaadin/vaadin-item';
+import '@vaadin/item';
+import '@vaadin/list-box';
+import '@vaadin/select';
 import { selectRenderer } from '../index.js';
 
 class SelectRendererDemo extends LitElement {

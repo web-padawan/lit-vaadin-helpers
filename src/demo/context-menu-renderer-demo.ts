@@ -1,11 +1,11 @@
 import { LitElement, html, TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
-import '@vaadin/vaadin-context-menu/vaadin-context-menu.js';
-import '@vaadin/vaadin-list-box/vaadin-list-box.js';
-import '@vaadin/vaadin-item/vaadin-item.js';
-import type { ItemElement } from '@vaadin/vaadin-item';
+import '@vaadin/context-menu';
+import '@vaadin/item';
+import '@vaadin/list-box';
+import type { Item } from '@vaadin/item';
 import { contextMenuRenderer } from '../index.js';
-import { ContextMenuRendererContext } from '@vaadin/vaadin-context-menu/vaadin-context-menu.js';
+import { ContextMenuRendererContext } from '@vaadin/context-menu';
 
 class ContextMenuRendererDemo extends LitElement {
   @property({ type: Array }) actions = ['Edit', 'Delete'];
@@ -37,7 +37,7 @@ class ContextMenuRendererDemo extends LitElement {
   }
 
   onItemClick(e: Event) {
-    this.selectedAction = (e.target as ItemElement).value;
+    this.selectedAction = (e.target as Item).value;
   }
 }
 

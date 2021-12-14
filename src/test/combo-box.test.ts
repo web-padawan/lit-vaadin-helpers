@@ -4,8 +4,8 @@ import { fixture, nextFrame } from '@open-wc/testing-helpers';
 import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
 import { PolymerElement } from '@polymer/polymer';
-import '@vaadin/vaadin-combo-box/vaadin-combo-box.js';
-import type { ComboBoxElement } from '@vaadin/vaadin-combo-box';
+import '@vaadin/combo-box';
+import type { ComboBox } from '@vaadin/combo-box';
 import type { OverlayElement } from '@vaadin/vaadin-overlay';
 import { comboBoxRenderer, ComboBoxLitRenderer } from '../index.js';
 
@@ -51,7 +51,7 @@ class UserSelector extends LitElement {
   }
 
   onItemClick(event: Event) {
-    const item = ((event.target as HTMLElement).getRootNode() as ShadowRoot).host;
+    const item = (event.target as HTMLElement).closest('vaadin-combo-box-item');
     this.dispatchEvent(new CustomEvent('item-click', { detail: { item } }));
   }
 }
@@ -65,20 +65,17 @@ const strip = (str: string): string => {
 
 describe('vaadin-combo-box renderer', () => {
   let wrapper: UserSelector;
-  let comboBox: ComboBoxElement;
-  let content: HTMLElement;
+  let comboBox: ComboBox;
   let item: PolymerElement;
 
   beforeEach(async () => {
     wrapper = await fixture(`<user-selector></user-selector>`);
-    comboBox = wrapper.renderRoot.querySelector('vaadin-combo-box') as ComboBoxElement;
+    comboBox = wrapper.renderRoot.querySelector('vaadin-combo-box') as ComboBox;
     comboBox.opened = true;
     await nextFrame();
-    const inner = comboBox.shadowRoot?.querySelector('#overlay') as PolymerElement;
-    const dropdown = inner.$.dropdown as PolymerElement;
+    const dropdown = (comboBox as unknown as PolymerElement).$.dropdown as PolymerElement;
     const overlay = dropdown.$.overlay as OverlayElement;
-    content = overlay.content as HTMLElement;
-    item = content.querySelector('vaadin-combo-box-item') as PolymerElement;
+    item = overlay.querySelector('vaadin-combo-box-item') as PolymerElement;
   });
 
   afterEach(async () => {
@@ -87,7 +84,7 @@ describe('vaadin-combo-box renderer', () => {
   });
 
   it('should render items properly when renderer is set', () => {
-    expect(strip(item.$.content.innerHTML)).to.equal('<b>laura arnaud</b>');
+    expect(strip(item.innerHTML)).to.equal('<b>laura arnaud</b>');
   });
 
   it('should render items when passed property is updated', async () => {
@@ -95,7 +92,7 @@ describe('vaadin-combo-box renderer', () => {
     wrapper.separator = '_';
     await wrapper.updateComplete;
     expect(spy.callCount).to.equal(1);
-    expect(strip(item.$.content.innerHTML)).to.equal('<b>laura_arnaud</b>');
+    expect(strip(item.innerHTML)).to.equal('<b>laura_arnaud</b>');
   });
 
   it('should not re-render on unrelated property change', async () => {
@@ -108,7 +105,7 @@ describe('vaadin-combo-box renderer', () => {
   it('should support using host methods as event listeners', () => {
     const spy = sinon.spy();
     wrapper.addEventListener('item-click', spy);
-    const child = item.$.content.querySelector('b') as HTMLElement;
+    const child = item.querySelector('b') as HTMLElement;
     child.click();
     expect(spy.callCount).to.equal(1);
     expect(spy.firstCall.args[0].detail.item).to.deep.equal(item);

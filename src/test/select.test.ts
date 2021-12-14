@@ -3,11 +3,11 @@ import sinon from 'sinon';
 import { fixture } from '@open-wc/testing-helpers';
 import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import type { SelectElement } from '@vaadin/vaadin-select';
+import type { Select } from '@vaadin/select';
 import type { OverlayElement } from '@vaadin/vaadin-overlay';
-import '@vaadin/vaadin-select';
-import '@vaadin/vaadin-list-box';
-import '@vaadin/vaadin-item';
+import '@vaadin/item';
+import '@vaadin/list-box';
+import '@vaadin/select';
 import { selectRenderer } from '../index.js';
 
 class StatusSelector extends LitElement {
@@ -48,13 +48,13 @@ customElements.define('status-selector', StatusSelector);
 
 describe('vaadin-select renderer', () => {
   let wrapper: StatusSelector;
-  let select: SelectElement;
+  let select: Select;
   let overlay: OverlayElement;
   let content: HTMLElement;
 
   beforeEach(async () => {
     wrapper = await fixture(`<status-selector></status-selector>`);
-    select = wrapper.renderRoot.querySelector('vaadin-select') as SelectElement;
+    select = wrapper.renderRoot.querySelector('vaadin-select') as Select;
     overlay = select.shadowRoot!.querySelector('vaadin-select-overlay') as OverlayElement;
     content = overlay.content as HTMLElement;
   });

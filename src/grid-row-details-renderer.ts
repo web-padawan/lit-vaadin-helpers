@@ -1,35 +1,27 @@
 import { render, RenderOptions, TemplateResult } from 'lit';
 import { directive, DirectiveResult } from 'lit/directive.js';
-import { GridElement, GridItemModel } from '@vaadin/vaadin-grid';
+import { Grid, GridItemModel } from '@vaadin/grid';
 import { AbstractRendererDirective } from './abstract-renderer.js';
 import { debounce } from './utils.js';
 
 export type GridRowDetailsLitRenderer<T> = (
   item: T,
   model: GridItemModel<T>,
-  grid: GridElement
+  grid: Grid
 ) => TemplateResult;
 
 class GridRowDetailsRendererDirective extends AbstractRendererDirective<
-  GridElement,
+  Grid,
   GridRowDetailsLitRenderer<unknown>
 > {
   /**
    * Set renderer callback to the element.
    */
-  addRenderer<T>(
-    element: GridElement,
-    renderer: GridRowDetailsLitRenderer<T>,
-    options: RenderOptions
-  ) {
-    element.rowDetailsRenderer = (
-      root: HTMLElement,
-      grid?: GridElement,
-      model?: GridItemModel<T>
-    ) => {
+  addRenderer<T>(element: Grid, renderer: GridRowDetailsLitRenderer<T>, options: RenderOptions) {
+    element.rowDetailsRenderer = (root: HTMLElement, grid?: Grid, model?: GridItemModel<T>) => {
       if (model) {
         const item = model.item;
-        render(renderer.call(options.host, item, model, grid as GridElement), root, options);
+        render(renderer.call(options.host, item, model, grid as Grid), root, options);
       }
     };
   }
@@ -37,7 +29,7 @@ class GridRowDetailsRendererDirective extends AbstractRendererDirective<
   /**
    * Run renderer callback on the element.
    */
-  runRenderer(element: GridElement) {
+  runRenderer(element: Grid) {
     // Only call grid.requestContentUpdate() once per property change
     // in case if that property is used by several column renderers.
     debounce(element, () => {

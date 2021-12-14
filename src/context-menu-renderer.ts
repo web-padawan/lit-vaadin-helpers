@@ -1,36 +1,28 @@
 import { render, RenderOptions, TemplateResult } from 'lit';
 import { directive, DirectiveResult } from 'lit/directive.js';
-import { ContextMenuElement, ContextMenuRendererContext } from '@vaadin/vaadin-context-menu';
+import { ContextMenu, ContextMenuRendererContext } from '@vaadin/context-menu';
 import { AbstractRendererDirective } from './abstract-renderer.js';
 
 export type ContextMenuLitRenderer = (
   context: ContextMenuRendererContext,
-  menu: ContextMenuElement
+  menu: ContextMenu
 ) => TemplateResult;
 
 class ContextMenuRendererDirective extends AbstractRendererDirective<
-  ContextMenuElement,
+  ContextMenu,
   ContextMenuLitRenderer
 > {
   /**
    * Set renderer callback to the element.
    */
-  addRenderer(
-    element: ContextMenuElement,
-    renderer: ContextMenuLitRenderer,
-    options: RenderOptions
-  ) {
+  addRenderer(element: ContextMenu, renderer: ContextMenuLitRenderer, options: RenderOptions) {
     element.renderer = (
       root: HTMLElement,
-      menu?: ContextMenuElement,
+      menu?: ContextMenu,
       context?: ContextMenuRendererContext
     ) => {
       render(
-        renderer.call(
-          options.host,
-          context as ContextMenuRendererContext,
-          menu as ContextMenuElement
-        ),
+        renderer.call(options.host, context as ContextMenuRendererContext, menu as ContextMenu),
         root,
         options
       );
@@ -40,7 +32,7 @@ class ContextMenuRendererDirective extends AbstractRendererDirective<
   /**
    * Run renderer callback on the element.
    */
-  runRenderer(element: ContextMenuElement) {
+  runRenderer(element: ContextMenu) {
     element.requestContentUpdate();
   }
 }

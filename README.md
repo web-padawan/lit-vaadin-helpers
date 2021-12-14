@@ -8,7 +8,9 @@ Helpers for using [Vaadin web components](https://github.com/vaadin/web-componen
 npm install lit-vaadin-helpers
 ```
 
-Note: this library is compatible Vaadin components [21.0.0](https://github.com/vaadin/web-components/releases/tag/v21.0.0) and above.
+Note: the latest `0.3.0` version is compatible Vaadin components [22.0.0](https://github.com/vaadin/web-components/releases/tag/v22.0.0) and above.
+
+If you are using Vaadin components 21.0.x, please use `0.2.2` version.
 
 ## Usage
 

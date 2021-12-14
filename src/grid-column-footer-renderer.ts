@@ -1,24 +1,20 @@
 import { render, RenderOptions, TemplateResult } from 'lit';
 import { directive, DirectiveResult } from 'lit/directive.js';
-import { GridColumnElement } from '@vaadin/vaadin-grid';
+import { GridColumn } from '@vaadin/grid';
 import { AbstractGridColumnRenderer } from './abstract-grid-column-renderer.js';
 
-export type GridColumnFooterLitRenderer = (column: GridColumnElement) => TemplateResult;
+export type GridColumnFooterLitRenderer = (column: GridColumn) => TemplateResult;
 
 class GridColumnFooterRendererDirective extends AbstractGridColumnRenderer<
-  GridColumnElement,
+  GridColumn,
   GridColumnFooterLitRenderer
 > {
   /**
    * Set renderer callback to the element.
    */
-  addRenderer(
-    element: GridColumnElement,
-    renderer: GridColumnFooterLitRenderer,
-    options: RenderOptions
-  ) {
-    element.footerRenderer = (root: HTMLElement, column?: GridColumnElement) => {
-      render(renderer.call(options.host, column as GridColumnElement), root, options);
+  addRenderer(element: GridColumn, renderer: GridColumnFooterLitRenderer, options: RenderOptions) {
+    element.footerRenderer = (root: HTMLElement, column?: GridColumn) => {
+      render(renderer.call(options.host, column as GridColumn), root, options);
     };
   }
 }

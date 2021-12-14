@@ -1,9 +1,10 @@
 import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import '@vaadin/vaadin-button/vaadin-button.js';
-import '@vaadin/vaadin-date-picker/vaadin-date-picker.js';
-import '@vaadin/vaadin-dialog/vaadin-dialog.js';
-import type { DatePickerElement } from '@vaadin/vaadin-date-picker';
+import '@vaadin/button';
+import '@vaadin/date-picker';
+import '@vaadin/dialog';
+import type { DatePicker } from '@vaadin/date-picker';
+import type { DialogOpenedChangedEvent } from '@vaadin/dialog';
 import { dialogRenderer } from '../index.js';
 
 class DialogRendererDemo extends LitElement {
@@ -32,11 +33,11 @@ class DialogRendererDemo extends LitElement {
   }
 
   onDateChange(e: Event) {
-    const target = e.target as DatePickerElement;
+    const target = e.target as DatePicker;
     this.selectedDate = target.value;
   }
 
-  onOpenedChanged(e: CustomEvent) {
+  onOpenedChanged(e: DialogOpenedChangedEvent) {
     // upward property binding
     this.opened = e.detail.value;
   }

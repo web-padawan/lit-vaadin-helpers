@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import '@vaadin/vaadin-button/vaadin-button.js';
-import '@vaadin/vaadin-notification/vaadin-notification.js';
+import '@vaadin/button';
+import '@vaadin/notification';
 import { notificationRenderer } from '../index.js';
 
 class NotificationRendererDemo extends LitElement {

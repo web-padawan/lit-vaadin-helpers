@@ -1,12 +1,12 @@
 import { LitElement, html, TemplateResult } from 'lit';
 import { property, query } from 'lit/decorators.js';
-import '@vaadin/vaadin-grid';
-import '@vaadin/vaadin-grid/vaadin-grid-column-group';
-import '@vaadin/vaadin-checkbox';
-import '@vaadin/vaadin-text-field';
-import type { CheckboxElement } from '@vaadin/vaadin-checkbox';
-import type { TextFieldElement } from '@vaadin/vaadin-text-field';
-import type { GridElement, GridEventContext } from '@vaadin/vaadin-grid';
+import '@vaadin/grid';
+import '@vaadin/grid/vaadin-grid-column-group.js';
+import '@vaadin/checkbox';
+import '@vaadin/text-field';
+import type { Checkbox } from '@vaadin/checkbox';
+import type { TextField } from '@vaadin/text-field';
+import type { Grid, GridEventContext } from '@vaadin/grid';
 import {
   columnBodyRenderer,
   columnHeaderRenderer,
@@ -36,7 +36,7 @@ class GridRendererDemo extends LitElement {
 
   @property({ type: String }) label = 'Filter';
 
-  @query('vaadin-grid') grid!: GridElement<User>;
+  @query('vaadin-grid') grid!: Grid<User>;
 
   render(): TemplateResult {
     return html`
@@ -102,7 +102,7 @@ class GridRendererDemo extends LitElement {
   }
 
   toggleDetails(event: CustomEvent) {
-    const target = event.target as CheckboxElement;
+    const target = event.target as Checkbox;
     const context = this.grid.getEventContext(event) as GridEventContext<User>;
     const user = context.item;
     if (user) {
@@ -125,7 +125,7 @@ class GridRendererDemo extends LitElement {
   }
 
   onChange(event: Event) {
-    this.filter = (event.target as TextFieldElement).value;
+    this.filter = (event.target as TextField).value;
   }
 }
 
