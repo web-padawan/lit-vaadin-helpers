@@ -7,3 +7,4 @@ export * from './grid-column-footer-renderer.js';
 export * from './grid-row-details-renderer.js';
 export * from './notification-renderer.js';
 export * from './select-renderer.js';
+export * from './virtual-list-renderer.js';

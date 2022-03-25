@@ -4,3 +4,4 @@ import './dialog-renderer-demo.js';
 import './grid-renderer-demo.js';
 import './notification-renderer-demo.js';
 import './select-renderer-demo.js';
+import './virtual-list-renderer-demo.js';

@@ -40,6 +40,7 @@
     "@vaadin/list-box": "^23.0.3",
     "@vaadin/notification": "^23.0.3",
     "@vaadin/select": "^23.0.3",
+    "@vaadin/virtual-list": "^23.0.3",
     "@web/dev-server": "^0.1.30",
     "@web/dev-server-esbuild": "^0.2.16",
     "@web/test-runner": "^0.13.27",
