@@ -6,7 +6,7 @@ import { AbstractRendererDirective } from './abstract-renderer.js';
 export type ComboBoxLitRenderer<T> = (
   item: T,
   model: ComboBoxItemModel<T>,
-  comboBox: ComboBox
+  comboBox: ComboBox<T>
 ) => TemplateResult;
 
 class ComboBoxRendererDirective extends AbstractRendererDirective<
@@ -17,7 +17,7 @@ class ComboBoxRendererDirective extends AbstractRendererDirective<
    * Set renderer callback to the element.
    */
   addRenderer<T>(element: ComboBox, renderer: ComboBoxLitRenderer<T>, options: RenderOptions) {
-    element.renderer = (root: HTMLElement, comboBox: ComboBox, model: ComboBoxItemModel<T>) => {
+    element.renderer = (root: HTMLElement, comboBox: ComboBox<T>, model: ComboBoxItemModel<T>) => {
       render(renderer.call(options.host, model.item, model, comboBox), root, options);
     };
   }
